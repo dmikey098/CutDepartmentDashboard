@@ -1,0 +1,39 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Sep 24, 2020, 8:24:37 PM
+    Author     : mikesda001
+*/
+
+#labelGrid Label {
+	-fx-font-size: 11pt;
+}
+
+#labelGrid {
+	-fx-pref-width: 800px;
+}
+
+.bw {
+    -fx-fill: #5EFC8D;
+    
+}
+
+.cord {
+    -fx-fill: #93BEDF;
+}
+
+.fiber {
+    -fx-fill: #6D5A72;
+}
+
+.pv {
+    -fx-fill: #EA9010;
+}
+
+.sp {
+    -fx-fill: #8377D1;
+}
+

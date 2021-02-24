@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.BorderPane?>
+
+
+<BorderPane xmlns="http://javafx.com/javafx/8.0.251" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.dwm.dashboard.controllers.CRDController">
+   <right>
+      <ListView fx:id="lstHistorySequence" prefHeight="840.0" prefWidth="224.0" BorderPane.alignment="CENTER" />
+   </right>
+   <center>
+      <TableView fx:id="tblResults" prefHeight="840.0" prefWidth="743.0" BorderPane.alignment="CENTER">
+        <columns>
+          <TableColumn fx:id="colSeq" prefWidth="75.0" text="THHSEQ" />
+          <TableColumn fx:id="colDats" prefWidth="75.0" text="THDATS" />
+            <TableColumn fx:id="colUsrs" prefWidth="75.0" text="THUSRS" />
+            <TableColumn fx:id="colLot" prefWidth="75.0" text="THLOT" />
+            <TableColumn fx:id="colOlcp" prefWidth="75.0" text="THOLCP" />
+            <TableColumn fx:id="colAsle" prefWidth="75.0" text="THASLE" />
+            <TableColumn fx:id="colBay" prefWidth="75.0" text="THBAY" />
+            <TableColumn fx:id="colLvl" prefWidth="75.0" text="THLVL" />
+            <TableColumn fx:id="colOhq" prefWidth="75.0" text="LDOHQ" />
+            <TableColumn fx:id="colComt" prefWidth="75.0" text="COMT" />
+            <TableColumn fx:id="colQty" prefWidth="75.0" text="QTY" />
+            <TableColumn fx:id="colDiff" prefWidth="75.0" text="DIFF" />
+        </columns>
+      </TableView>
+   </center>
+</BorderPane>

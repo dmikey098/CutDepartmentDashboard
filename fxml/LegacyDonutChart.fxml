@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.Group?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.Arc?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
+
+
+<AnchorPane fx:id="root" xmlns="http://javafx.com/javafx/8.0.261" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.dwm.dashboard.controllers.LegacyDonutChartController">
+    <children>
+       <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#ff9020" height="15.0" stroke="BLACK" strokeType="INSIDE" styleClass="bw" width="15.0" x="290.0" y="20.0" />
+       <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="15.0" stroke="BLACK" strokeType="INSIDE" styleClass="cord" width="15.0" x="290.0" y="45.0" />
+       <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="15.0" stroke="BLACK" strokeType="INSIDE" styleClass="fiber" width="15.0" x="290.0" y="70.0" />
+       <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="15.0" layoutX="290.0" layoutY="95.0" stroke="BLACK" strokeType="INSIDE" styleClass="pv" width="15.0" />
+       <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="15.0" layoutX="290.0" layoutY="120.0" stroke="BLACK" strokeType="INSIDE" styleClass="sp" width="15.0" />
+       <Label layoutX="320.0" layoutY="19.0" prefHeight="17.0" prefWidth="55.0" text="BW" />
+       <Label layoutX="320.0" layoutY="44.0" prefHeight="17.0" prefWidth="55.0" text="Cord" />
+       <Label layoutX="320.0" layoutY="69.0" prefHeight="17.0" prefWidth="55.0" text="Fiber" />
+       <Label layoutX="320.0" layoutY="94.0" prefHeight="17.0" prefWidth="55.0" text="PV" />
+       <Label layoutX="320.0" layoutY="119.0" prefHeight="17.0" prefWidth="55.0" text="SP" />
+       <Arc fx:id="arcRest" fill="WHITE" centerX="120.0" centerY="150.0" length="360.0" radiusX="100.0" radiusY="100.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" type="ROUND" />
+       <Arc fx:id="arcBW" fill="WHITE" centerX="120.0" centerY="150.0" onMouseClicked="#filterBW" radiusX="100.0" radiusY="100.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" styleClass="bw" type="ROUND">
+          <cursor>
+             <Cursor fx:constant="HAND" />
+          </cursor>
+       </Arc>
+       <Arc fx:id="arcCord" fill="WHITE" centerX="120.0" centerY="150.0" onMouseClicked="#filterCord" radiusX="100.0" radiusY="100.0" startAngle="72.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" styleClass="cord" type="ROUND">
+          <cursor>
+             <Cursor fx:constant="HAND" />
+          </cursor>
+       </Arc>
+       <Arc fx:id="arcFiber" fill="WHITE" centerX="120.0" centerY="150.0" onMouseClicked="#filterFiber" radiusX="100.0" radiusY="100.0" startAngle="144.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" styleClass="fiber" type="ROUND">
+          <cursor>
+             <Cursor fx:constant="HAND" />
+          </cursor>
+       </Arc>
+       <Arc fx:id="arcPV" fill="WHITE" centerX="120.0" centerY="150.0" onMouseClicked="#filterPV" radiusX="100.0" radiusY="100.0" startAngle="216.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" styleClass="pv" type="ROUND">
+          <cursor>
+             <Cursor fx:constant="HAND" />
+          </cursor>
+       </Arc>
+       <Arc fx:id="arcSP" fill="WHITE" centerX="120.0" centerY="150.0"  onMouseClicked="#filterSPs" radiusX="100.0" radiusY="100.0" startAngle="288.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" styleClass="sp" type="ROUND">
+          <cursor>
+             <Cursor fx:constant="HAND" />
+          </cursor>
+       </Arc>
+       <Circle fill="#f2f2f2" centerX="120.0" centerY="150.0" radius="60.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" />
+    </children>
+ </AnchorPane>

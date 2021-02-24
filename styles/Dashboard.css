@@ -1,0 +1,137 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Dec 9, 2020, 9:21:36 PM
+    Author     : mikesda001
+*/
+
+.hidden {
+    -fx-max-height: 0;
+}
+
+.button-custom {
+    -fx-background-color: #abb7b7;
+    -fx-border-color: #95a5a6;
+    -fx-border-width: 0 1 3 1;
+    -fx-border-radius: 0;
+    -fx-background-radius: 0;
+ /*   -fx-text-align: center;*/
+    -fx-text-fill: white;
+    -fx-padding: 10 20 10 20;
+    -fx-font-size: 12px;
+    -fx-font-weight: 800;
+    -fx-cursor: hand;
+}
+
+.button-custom:focused {
+    -fx-padding: 10 20 10 20;
+    -fx-border-width: 0 1 3 1;
+}
+
+.button-custom:hover {
+    -fx-opacity: 0.8; 
+}
+
+.clear-filter-button {
+    -fx-text-fill: grey;
+}
+
+.clear-filter-button:hover {
+    -fx-text-fill: black;
+}
+
+.root {
+    -fx-background-color: #6c7a89;
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+    
+}
+
+.table-view * {
+    -fx-text-fill: black;
+}
+
+.widget {
+    -fx-background-color: #f3f1ef;
+    -fx-background-radius: 3px, 3px, 2px, 1px;
+    -fx-effect: dropshadow(gaussian, black, 2, 0, 0, 1);
+}
+
+.table-view {
+    -fx-background-color: transparent;
+}
+    
+.table-view * {
+    -fx-background-color: transparent;
+    -fx-control-inner-background-alt: transparent;
+}
+
+.indexed-cell:focused {
+    -fx-background-color: grey;
+}
+
+.table-row-cell:focused {
+    -fx-background-color: grey;
+}
+
+.table-view .table-cell{
+    -fx-border-width: 0;
+    -fx-padding: 10 5 10 5;
+}
+
+
+/*
+.table-view .column-header-background {
+    -fx-max-height: 0;
+    -fx-pref-height: 0;
+    -fx-min-height: 0;
+}
+
+
+.table-view:focused {
+    -fx-background-color: transparent; 
+    -fx-background-insets: 0;
+    -fx-background-radius: 0;
+    -fx-padding: 1;
+}
+*/
+
+.table-view .virtual-flow .scroll-bar:vertical,
+.table-view .virtual-flow .scroll-bar:vertical .track,
+.table-view .virtual-flow .scroll-bar:vertical .track-background,
+.table-view .virtual-flow .scroll-bar:horizontal,
+.table-view .virtual-flow .scroll-bar:horizontal .track,
+.table-view .virtual-flow .scroll-bar:horizontal .track-background {
+    -fx-background-color: transparent;
+}
+
+.table-view .virtual-flow .scroll-bar .increment-button,
+.table-view .virtual-flow .scroll-bar .decrement-button {
+    -fx-opacity: 0;
+    -fx-padding: 0;
+}
+
+.bw {
+    -fx-fill: #5EFC8D;
+    
+}
+
+.cord {
+    -fx-fill: #93BEDF;
+}
+
+.fiber {
+    -fx-fill: #6D5A72;
+}
+
+.pv {
+    -fx-fill: #EA9010;
+}
+
+.sp {
+    -fx-fill: #8377D1;
+}
+

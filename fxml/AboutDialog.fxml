@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Hyperlink?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="168.0" prefWidth="362.0" xmlns="http://javafx.com/javafx/8.0.271" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.dwm.dashboard.controllers.AboutController">
+   <children>
+      <Label layoutX="27.0" layoutY="24.0" prefHeight="17.0" prefWidth="85.0" text="Version:" />
+      <Label fx:id="lblVersion" layoutX="112.0" layoutY="24.0" prefHeight="17.0" prefWidth="85.0" text="VERSION" />
+      <Label layoutX="27.0" layoutY="41.0" prefHeight="17.0" prefWidth="85.0" text="Author:" />
+      <Label layoutX="112.0" layoutY="41.0" prefHeight="17.0" prefWidth="85.0" text="Daniel Mikesell" />
+      <Hyperlink layoutX="27.0" layoutY="130.0" prefHeight="23.0" prefWidth="143.0" text="https://icons8.com" />
+      <ImageView fitHeight="78.0" fitWidth="71.0" layoutX="271.0" layoutY="23.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../images/icon.png" />
+         </image>
+      </ImageView>
+   </children>
+</AnchorPane>

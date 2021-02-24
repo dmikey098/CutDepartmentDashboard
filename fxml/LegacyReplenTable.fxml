@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.geometry.Insets?>
+
+<ScrollPane fx:id="scrollPane" fitToHeight="true" fitToWidth="true" style="-fx-padding: 0;" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.251" fx:controller="org.dwm.dashboard.controllers.LegacyReplenTableController">
+
+       <TableView fx:id="tblQueue" editable="true" >
+         <columns>
+           <TableColumn fx:id="colPriority" minWidth="40.0" prefWidth="75.0" styleClass="cell" text="Pty" />
+           <TableColumn fx:id="colOrderNumber" minWidth="60.0" prefWidth="75.0" styleClass="cell" text="Order" />
+             <TableColumn fx:id="colLicensePlate" minWidth="125.0" prefWidth="125.0" styleClass="cell" text="LP" />
+             <TableColumn fx:id="colPartNumber" minWidth="110.0" prefWidth="110.0" styleClass="cell" text="Part Number" />
+             <TableColumn fx:id="colStatus" prefWidth="75.0" styleClass="cell" text="Status" />
+             <TableColumn fx:id="colUser" prefWidth="75.0" styleClass="cell" text="User" />
+             <TableColumn fx:id="colAsle" prefWidth="75.0" text="Asl" />
+             <TableColumn fx:id="colBay" prefWidth="75.0" text="Bay" />
+             <TableColumn fx:id="colLevel" prefWidth="75.0" text="Lvl" />
+         </columns>
+       </TableView>
+</ScrollPane>

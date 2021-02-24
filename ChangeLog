@@ -1,0 +1,9 @@
+1.0.3
+	- Added ability to leave second priorty text field blank to only return a single priortiy.
+	- Updated isCradle method in QueueItem to accurately count building wire 40's, 42's, and 36's.
+1.0.4
+	- Set the icon for the About dialog window. (A001)
+	- Added shortcut keys (ctrl-e) to copy totals to clipboard. (A002)
+	- Updated duplicate license plates to reuse the same 100 colors. Before indexes over 99 would not have a fill. (A003)
+	- Added new export options under the File menu. (A003)
+	- Added export Totals option under the File menu. (A004)

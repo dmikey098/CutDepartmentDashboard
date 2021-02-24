@@ -1,0 +1,45 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Dec 9, 2020, 9:21:36 PM
+    Author     : mikesda001
+*/
+
+.button-custom {
+    -fx-background-color: #2e2f33;
+    -fx-text-fill: #6c737c;
+    
+}
+
+GridPane {
+    -fx-background-color: black;
+}
+
+
+.bw {
+    -fx-fill: #5EFC8D;
+    
+}
+
+.cord {
+    -fx-fill: #93BEDF;
+}
+
+.fiber {
+    -fx-fill: #6D5A72;
+}
+
+.pv {
+    -fx-fill: #EA9010;
+}
+
+.sp {
+    -fx-fill: #8377D1;
+}
+
+.inner_circle {
+    -fx-background-color: #2a2a2a;
+}

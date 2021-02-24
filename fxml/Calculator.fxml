@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.DialogPane?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<DialogPane styleClass="widget" prefHeight="275.0" prefWidth="379.0" xmlns="http://javafx.com/javafx/8.0.251" xmlns:fx="http://javafx.com/fxml/1" stylesheets="@Dashboard3_1.css" fx:controller="org.dwm.dashboard.controllers.CalculatorController">
+   <content>
+      <AnchorPane prefHeight="314.0" prefWidth="379.0">
+         <children>
+            <TextField fx:id="txtPartNumber" layoutX="141.0" layoutY="42.0" onKeyTyped="#setDiameter" />
+            <TextField fx:id="txtDiameter" layoutX="141.0" layoutY="81.0" />
+            <TextField fx:id="txtQuantity" layoutX="141.0" layoutY="119.0" />
+            <Button fx:id="btnCalculate" layoutX="240.0" layoutY="230.0" mnemonicParsing="false" onAction="#calculate" prefWidth="75.0" text="Calculate" />
+            <Button fx:id="btnNext" layoutX="162.0" layoutY="230.0" mnemonicParsing="false" onAction="#nextReel" prefWidth="75.0" text="Next" />
+            <Button fx:id="btnPrevious" layoutX="84.0" layoutY="230.0" mnemonicParsing="false" onAction="#prevReel" prefWidth="75.0" text="Previous" />
+            <Label layoutX="43.0" layoutY="47.0" prefHeight="17.0" prefWidth="89.0" text="Part Number:" />
+            <Label layoutX="43.0" layoutY="85.0" prefHeight="17.0" prefWidth="89.0" text="Diameter:" />
+            <Label layoutX="43.0" layoutY="123.0" prefHeight="17.0" prefWidth="89.0" text="Quantity:" />
+            <Label fx:id="lblResult" layoutX="42.0" layoutY="14.0" prefHeight="17.0" prefWidth="295.0" />
+            <CheckBox fx:id="chkSpecialty" layoutX="53.0" layoutY="169.0" mnemonicParsing="false" text="Specialty" />
+            <CheckBox fx:id="chkTHHN" layoutX="53.0" layoutY="198.0" mnemonicParsing="false" text="Use THHN Chart" />
+         </children>
+      </AnchorPane>
+   </content>
+</DialogPane>

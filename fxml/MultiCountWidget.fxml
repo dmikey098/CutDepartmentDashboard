@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Group?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.text.Font?>
+
+
+<AnchorPane xmlns="http://javafx.com/javafx/8.0.261" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.dwm.dashboard.controllers.MultiCountWidgetController">
+   <children>
+      <HBox alignment="CENTER" layoutX="24.0" layoutY="24.0" spacing="24.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <Label fx:id="lblHeader1" alignment="CENTER" maxWidth="80.0" minWidth="80.0" prefWidth="80.0" text="Cuts" />
+            <Label fx:id="lblHeader2" alignment="CENTER" maxWidth="80.0" minWidth="80.0" prefWidth="80.0" text="Shuttles" />
+            <Label fx:id="lblHeader3" alignment="CENTER" maxWidth="80.0" minWidth="80.0" prefWidth="80.0" text="Replens" />
+         </children>
+      </HBox>
+      <HBox alignment="CENTER" layoutX="-16.0" layoutY="41.0" spacing="24.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="17.0">
+         <children>
+            <Group HBox.hgrow="ALWAYS">
+               <children>
+                  <Circle fx:id="background1" fill="DODGERBLUE" radius="40.0" stroke="BLACK" strokeType="INSIDE" />
+                  <Circle fill="WHITE" radius="35.0" stroke="BLACK" strokeType="INSIDE" />
+                  <Label fx:id="lblTotal1" alignment="CENTER" contentDisplay="CENTER" layoutX="-40.0" layoutY="-26.0" prefHeight="27.0" prefWidth="80.0" text="999" textAlignment="CENTER">
+                     <font>
+                        <Font size="36.0" />
+                     </font>
+                  </Label>
+               </children>
+            </Group>
+            <Group HBox.hgrow="ALWAYS">
+               <children>
+                  <Circle fx:id="background2" fill="DODGERBLUE" radius="40.0" stroke="BLACK" strokeType="INSIDE" />
+                  <Circle fill="WHITE" radius="35.0" stroke="BLACK" strokeType="INSIDE" />
+                  <Label fx:id="lblTotal2" alignment="CENTER" layoutX="-40.0" layoutY="-26.0" prefWidth="80.0" text="999" textAlignment="CENTER">
+                     <font>
+                        <Font size="36.0" />
+                     </font>
+                  </Label>
+               </children>
+            </Group>
+            <Group HBox.hgrow="ALWAYS">
+               <children>
+                  <Circle fx:id="background3" fill="DODGERBLUE" radius="40.0" stroke="BLACK" strokeType="INSIDE" />
+                  <Circle fill="WHITE" radius="35.0" stroke="BLACK" strokeType="INSIDE" />
+                  <Label fx:id="lblTotal3" alignment="CENTER" layoutX="-40.0" layoutY="-26.0" prefWidth="80.0" text="999" textAlignment="CENTER">
+                     <font>
+                        <Font size="36.0" />
+                     </font>
+                  </Label>
+               </children>
+            </Group>
+         </children>
+      </HBox>
+   </children>
+   <padding>
+      <Insets bottom="24.0" left="24.0" right="24.0" top="24.0" />
+   </padding>
+</AnchorPane>

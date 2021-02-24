@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.String?>
+<?import javafx.scene.control.ContextMenu?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.ToolBar?>
+
+<!-- <ScrollPane fx:id="scrollPane" fitToHeight="true" fitToWidth="true" style="-fx-padding: 0;" xmlns="http://javafx.com/javafx/8.0.251" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.dwm.app.controller.LegacyCutTableController">    -->
+<VBox xmlns="http://javafx.com/javafx/8.0.251" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.dwm.dashboard.controllers.LegacyCutTableController">
+    <children>
+        <ToolBar prefHeight="40.0" prefWidth="200.0">
+            <items>
+                <TextField fx:id="txtSearchField" />
+            </items>
+        </ToolBar>
+<ScrollPane VBox.vgrow="ALWAYS" fx:id="scrollPane" fitToHeight="true" fitToWidth="true" style="-fx-padding: 0;" >    
+    <content>
+       <TableView fx:id="tblQueue" editable="true" prefHeight="0.0" prefWidth="0.0" style="-fx-padding: 0;" stylesheets="@../styles/LegacyCutTable.css">
+         <columns>
+           <TableColumn fx:id="colPriority" minWidth="40.0" prefWidth="75.0" styleClass="cell" text="Pty" />
+           <TableColumn fx:id="colOrderNumber" minWidth="60.0" prefWidth="75.0" styleClass="cell" text="Order" />
+             <TableColumn fx:id="colLicensePlate" minWidth="125.0" prefWidth="125.0" styleClass="cell" text="LP" />
+             <TableColumn fx:id="colPartNumber" minWidth="110.0" prefWidth="110.0" styleClass="cell" text="Part Number" />
+             <TableColumn fx:id="colOrderQuantity" prefWidth="75.0" styleClass="cell" text="Order Qty" />
+             <TableColumn fx:id="colOnHandQuantity" prefWidth="75.0" styleClass="cell" text="O/H Qty" />
+             <TableColumn fx:id="colCarrier" prefWidth="75.0" styleClass="cell" text="Carrier" />
+             <TableColumn fx:id="colWave" prefWidth="75.0" styleClass="cell" text="Wave" />
+             <TableColumn fx:id="colStatus" prefWidth="75.0" styleClass="cell" text="Status" />
+             <TableColumn fx:id="colUser" prefWidth="75.0" styleClass="cell" text="User" />
+             <TableColumn fx:id="colType" prefWidth="75.0" styleClass="cell" text="Type" />
+             <TableColumn fx:id="colCustomer" prefWidth="125.0" text="Customer">
+               <styleClass>
+                  <String fx:value="customer" />
+                  <String fx:value="cell" />
+               </styleClass></TableColumn>
+             <TableColumn fx:id="colLine" minWidth="40.0" prefWidth="75.0" styleClass="cell" text="Line" />
+             <TableColumn fx:id="colCableOD" prefWidth="75.0" styleClass="cell" text="Cable OD" />
+             <TableColumn fx:id="colReel" minWidth="45.0" prefWidth="45.0" text="Reel">
+               <styleClass>
+                  <String fx:value="reel" />
+                  <String fx:value="cell" />
+               </styleClass></TableColumn>
+             <TableColumn fx:id="colReplenStatus" prefWidth="75.0" styleClass="cell" text="Replen Sts" />
+             <TableColumn fx:id="colShipOnDate" prefWidth="75.0" styleClass="cell" text="Ship Date"><styleClass><String fx:value="ship-date" /></styleClass></TableColumn>
+         </columns>
+         <contextMenu>
+            <ContextMenu>
+              <items>
+                <MenuItem fx:id="mitmExclude" mnemonicParsing="false" text="Exclude" />
+                <MenuItem fx:id="mitmInclude" mnemonicParsing="false" text="Include All" />
+              </items>
+            </ContextMenu>
+         </contextMenu>
+       </TableView>
+    </content>
+    
+ </ScrollPane>
+ </children>  
+</VBox>

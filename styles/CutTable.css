@@ -1,0 +1,281 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Sep 24, 2020, 8:24:37 PM
+    Author     : mikesda001
+*/
+
+.table-view {
+    -fx-background-color: transparent;
+}
+    
+.table-view * {
+    -fx-background-color: transparent;
+    -fx-control-inner-background-alt: transparent;
+    -fx-text-fill: white;
+}
+
+.indexed-cell:focused {
+    -fx-background-color: grey;
+}
+
+.table-row-cell:focused {
+    -fx-background-color: grey;
+}
+
+.table-view .table-cell{
+    -fx-border-width: 0;
+    -fx-padding: 10 5 10 5;
+}
+
+.table-view .virtual-flow .scroll-bar:vertical,
+.table-view .virtual-flow .scroll-bar:vertical .track,
+.table-view .virtual-flow .scroll-bar:vertical .track-background,
+.table-view .virtual-flow .scroll-bar:horizontal,
+.table-view .virtual-flow .scroll-bar:horizontal .track,
+.table-view .virtual-flow .scroll-bar:horizontal .track-background {
+    -fx-background-color: transparent;
+}
+
+.table-view .virtual-flow .scroll-bar .increment-button,
+.table-view .virtual-flow .scroll-bar .decrement-button {
+    -fx-opacity: 0;
+    -fx-padding: 0;
+}
+
+.sp .license-plate { 
+    -fx-background-color: yellow; 
+    -fx-text-fill: black;
+}
+
+
+
+.red { -fx-background-color: red; }
+
+
+.flag-customer .customer {
+    -fx-background-color: red;
+}
+
+.flag-reel .reel {
+    -fx-background-color: red;
+}
+
+.flag-date .cell {
+    -fx-background-color: red;
+}
+
+.dup .cell {
+    -fx-text-fill: black;
+}
+
+/*
+.dup0 .license-plate { -fx-background-color: #e7bdab; }
+.dup1 .license-plate { -fx-background-color: #bcafe0; }
+.dup2 .license-plate { -fx-background-color: #f9cac2; }
+.dup3 .license-plate { -fx-background-color: #92afe9; }
+.dup4 .license-plate { -fx-background-color: #f9908b; }
+.dup5 .license-plate { -fx-background-color: #d2f7e8; }
+.dup6 .license-plate { -fx-background-color: #dca6aa; }
+.dup7 .license-plate { -fx-background-color: #dad4f4; }
+.dup8 .license-plate { -fx-background-color: #fb8296; }
+.dup9 .license-plate { -fx-background-color: #d09997; }
+.dup10 .license_plate { -fx-background-color: #8aa1fe; }
+.dup11 .license_plate { -fx-background-color: #fa85ee; }
+.dup12 .license_plate { -fx-background-color: #b8f2d0; }
+.dup13 .license_plate { -fx-background-color: #b1c5af; }
+.dup14 .license_plate { -fx-background-color: #f3abed; }
+.dup15 .license_plate { -fx-background-color: #c2aa8b; }
+.dup16 .license_plate { -fx-background-color: #f5b0f6; }
+.dup17 .license_plate { -fx-background-color: #d78be2; }
+.dup18 .license_plate { -fx-background-color: #9be3f4; }
+.dup19 .license_plate { -fx-background-color: #acd5a8; }
+.dup20 .license_plate { -fx-background-color: #da89f7; }
+.dup21 .license_plate { -fx-background-color: #e1ccdc; }
+.dup22 .license_plate { -fx-background-color: #f9cad1; }
+.dup23 .license_plate { -fx-background-color: #8f95e9; }
+.dup24 .license_plate { -fx-background-color: #d1a7ea; }
+.dup25 .license_plate { -fx-background-color: #d68ce0; }
+.dup26 .license_plate { -fx-background-color: #dbd8a8; }
+.dup27 .license_plate { -fx-background-color: #a1c0bd; }
+.dup28 .license_plate { -fx-background-color: #e09d8a; }
+.dup29 .license_plate { -fx-background-color: #ab888c; }
+.dup30 .license_plate { -fx-background-color: #a5bda8; }
+.dup31 .license_plate { -fx-background-color: #b199a1; }
+.dup32 .license_plate { -fx-background-color: #cdb7f3; }
+.dup33 .license_plate { -fx-background-color: #b7ced1; }
+.dup34 .license_plate { -fx-background-color: #e294aa; }
+.dup35 .license_plate { -fx-background-color: #98f0ef; }
+.dup36 .license_plate { -fx-background-color: #d8c4c7; }
+.dup37 .license_plate { -fx-background-color: #e9e7ae; }
+.dup38 .license_plate { -fx-background-color: #92be94; }
+.dup39 .license_plate { -fx-background-color: #c59ad4; }
+.dup40 .license_plate { -fx-background-color: #da8ca8; }
+.dup41 .license_plate { -fx-background-color: #f9a7d9; }
+.dup42 .license_plate { -fx-background-color: #d882fe; }
+.dup43 .license_plate { -fx-background-color: #8ba196; }
+.dup44 .license_plate { -fx-background-color: #c793b9; }
+.dup45 .license_plate { -fx-background-color: #9ea5c0; }
+.dup46 .license_plate { -fx-background-color: #82b5f1; }
+.dup47 .license_plate { -fx-background-color: #b4deff; }
+.dup48 .license_plate { -fx-background-color: #9780db; }
+.dup49 .license_plate { -fx-background-color: #88afa8; }
+.dup50 .license_plate { -fx-background-color: #a8a487; }
+.dup51 .license_plate { -fx-background-color: #ece5ac; }
+.dup52 .license_plate { -fx-background-color: #f1b199; }
+.dup53 .license_plate { -fx-background-color: #9bedb1; }
+.dup54 .license_plate { -fx-background-color: #acf896; }
+.dup55 .license_plate { -fx-background-color: #faeeb8; }
+.dup56 .license_plate { -fx-background-color: #9cccaa; }
+.dup57 .license_plate { -fx-background-color: #cc999a; }
+.dup58 .license_plate { -fx-background-color: #9fa481; }
+.dup59 .license_plate { -fx-background-color: #aa8af5; }
+.dup60 .license_plate { -fx-background-color: #8791a5; }
+.dup61 .license_plate { -fx-background-color: #83edb6; }
+.dup62 .license_plate { -fx-background-color: #c2b99f; }
+.dup63 .license_plate { -fx-background-color: #89c4e3; }
+.dup64 .license_plate { -fx-background-color: #8ad7d5; }
+.dup65 .license_plate { -fx-background-color: #e3f783; }
+.dup66 .license_plate { -fx-background-color: #bda4c3; }
+.dup67 .license_plate { -fx-background-color: #c2f891; }
+.dup68 .license_plate { -fx-background-color: #c7f688; }
+.dup69 .license_plate { -fx-background-color: #da849e; }
+.dup70 .license_plate { -fx-background-color: #baa8af; }
+.dup71 .license_plate { -fx-background-color: #e4d398; }
+.dup72 .license_plate { -fx-background-color: #ade5c4; }
+.dup73 .license_plate { -fx-background-color: #f0b58a; }
+.dup74 .license_plate { -fx-background-color: #b6b2ce; }
+.dup75 .license_plate { -fx-background-color: #f6c1e4; }
+.dup76 .license_plate { -fx-background-color: #96e2a1; }
+.dup77 .license_plate { -fx-background-color: #c980ac; }
+.dup78 .license_plate { -fx-background-color: #94f4da; }
+.dup79 .license_plate { -fx-background-color: #d1d887; }
+.dup80 .license_plate { -fx-background-color: #b1b8fc; }
+.dup81 .license_plate { -fx-background-color: #f89cc7; }
+.dup82 .license_plate { -fx-background-color: #fba297; }
+.dup83 .license_plate { -fx-background-color: #ffd3bc; }
+.dup84 .license_plate { -fx-background-color: #ae9dcc; }
+.dup85 .license_plate { -fx-background-color: #d8b8e5; }
+.dup86 .license_plate { -fx-background-color: #c6f9e1; }
+.dup87 .license_plate { -fx-background-color: #c2a8b3; }
+.dup88 .license_plate { -fx-background-color: #9dcbb8; }
+.dup89 .license_plate { -fx-background-color: #8fdbfe; }
+.dup90 .license_plate { -fx-background-color: #dcd8c8; }
+.dup91 .license_plate { -fx-background-color: #ccf7bf; }
+.dup92 .license_plate { -fx-background-color: #d2b694; }
+.dup93 .license_plate { -fx-background-color: #a998a6; }
+.dup94 .license_plate { -fx-background-color: #98fa8d; }
+.dup95 .license_plate { -fx-background-color: #a5b1f8; }
+.dup96 .license_plate { -fx-background-color: #b5f1cf; }
+.dup97 .license_plate { -fx-background-color: #e0b081; }
+.dup98 .license_plate { -fx-background-color: #b4cab5; }
+.dup99 .license_plate { -fx-background-color: #d0dca1; }
+*/
+
+
+.dup0 { -fx-background-color: #e7bdab; }
+.dup1 { -fx-background-color: #bcafe0; }
+.dup2 { -fx-background-color: #f9cac2; }
+.dup3 { -fx-background-color: #92afe9; }
+.dup4 { -fx-background-color: #f9908b; }
+.dup5 { -fx-background-color: #d2f7e8; }
+.dup6 { -fx-background-color: #dca6aa; }
+.dup7 { -fx-background-color: #dad4f4; }
+.dup8 { -fx-background-color: #fb8296; }
+.dup9 { -fx-background-color: #d09997; }
+.dup10 { -fx-background-color: #8aa1fe; }
+.dup11 { -fx-background-color: #fa85ee; }
+.dup12 { -fx-background-color: #b8f2d0; }
+.dup13 { -fx-background-color: #b1c5af; }
+.dup14 { -fx-background-color: #f3abed; }
+.dup15 { -fx-background-color: #c2aa8b; }
+.dup16 { -fx-background-color: #f5b0f6; }
+.dup17 { -fx-background-color: #d78be2; }
+.dup18 { -fx-background-color: #9be3f4; }
+.dup19 { -fx-background-color: #acd5a8; }
+.dup20 { -fx-background-color: #da89f7; }
+.dup21 { -fx-background-color: #e1ccdc; }
+.dup22 { -fx-background-color: #f9cad1; }
+.dup23 { -fx-background-color: #8f95e9; }
+.dup24 { -fx-background-color: #d1a7ea; }
+.dup25 { -fx-background-color: #d68ce0; }
+.dup26 { -fx-background-color: #dbd8a8; }
+.dup27 { -fx-background-color: #a1c0bd; }
+.dup28 { -fx-background-color: #e09d8a; }
+.dup29 { -fx-background-color: #ab888c; }
+.dup30 { -fx-background-color: #a5bda8; }
+.dup31 { -fx-background-color: #b199a1; }
+.dup32 { -fx-background-color: #cdb7f3; }
+.dup33 { -fx-background-color: #b7ced1; }
+.dup34 { -fx-background-color: #e294aa; }
+.dup35 { -fx-background-color: #98f0ef; }
+.dup36 { -fx-background-color: #d8c4c7; }
+.dup37 { -fx-background-color: #e9e7ae; }
+.dup38 { -fx-background-color: #92be94; }
+.dup39 { -fx-background-color: #c59ad4; }
+.dup40 { -fx-background-color: #da8ca8; }
+.dup41 { -fx-background-color: #f9a7d9; }
+.dup42 { -fx-background-color: #d882fe; }
+.dup43 { -fx-background-color: #8ba196; }
+.dup44 { -fx-background-color: #c793b9; }
+.dup45 { -fx-background-color: #9ea5c0; }
+.dup46 { -fx-background-color: #82b5f1; }
+.dup47 { -fx-background-color: #b4deff; }
+.dup48 { -fx-background-color: #9780db; }
+.dup49 { -fx-background-color: #88afa8; }
+.dup50 { -fx-background-color: #a8a487; }
+.dup51 { -fx-background-color: #ece5ac; }
+.dup52 { -fx-background-color: #f1b199; }
+.dup53 { -fx-background-color: #9bedb1; }
+.dup54 { -fx-background-color: #acf896; }
+.dup55 { -fx-background-color: #faeeb8; }
+.dup56 { -fx-background-color: #9cccaa; }
+.dup57 { -fx-background-color: #cc999a; }
+.dup58 { -fx-background-color: #9fa481; }
+.dup59 { -fx-background-color: #aa8af5; }
+.dup60 { -fx-background-color: #8791a5; }
+.dup61 { -fx-background-color: #83edb6; }
+.dup62 { -fx-background-color: #c2b99f; }
+.dup63 { -fx-background-color: #89c4e3; }
+.dup64 { -fx-background-color: #8ad7d5; }
+.dup65 { -fx-background-color: #e3f783; }
+.dup66 { -fx-background-color: #bda4c3; }
+.dup67 { -fx-background-color: #c2f891; }
+.dup68 { -fx-background-color: #c7f688; }
+.dup69 { -fx-background-color: #da849e; }
+.dup70 { -fx-background-color: #baa8af; }
+.dup71 { -fx-background-color: #e4d398; }
+.dup72 { -fx-background-color: #ade5c4; }
+.dup73 { -fx-background-color: #f0b58a; }
+.dup74 { -fx-background-color: #b6b2ce; }
+.dup75 { -fx-background-color: #f6c1e4; }
+.dup76 { -fx-background-color: #96e2a1; }
+.dup77 { -fx-background-color: #c980ac; }
+.dup78 { -fx-background-color: #94f4da; }
+.dup79 { -fx-background-color: #d1d887; }
+.dup80 { -fx-background-color: #b1b8fc; }
+.dup81 { -fx-background-color: #f89cc7; }
+.dup82 { -fx-background-color: #fba297; }
+.dup83 { -fx-background-color: #ffd3bc; }
+.dup84 { -fx-background-color: #ae9dcc; }
+.dup85 { -fx-background-color: #d8b8e5; }
+.dup86 { -fx-background-color: #c6f9e1; }
+.dup87 { -fx-background-color: #c2a8b3; }
+.dup88 { -fx-background-color: #9dcbb8; }
+.dup89 { -fx-background-color: #8fdbfe; }
+.dup90 { -fx-background-color: #dcd8c8; }
+.dup91 { -fx-background-color: #ccf7bf; }
+.dup92 { -fx-background-color: #d2b694; }
+.dup93 { -fx-background-color: #a998a6; }
+.dup94 { -fx-background-color: #98fa8d; }
+.dup95 { -fx-background-color: #a5b1f8; }
+.dup96 { -fx-background-color: #b5f1cf; }
+.dup97 { -fx-background-color: #e0b081; }
+.dup98 { -fx-background-color: #b4cab5; }
+.dup99 { -fx-background-color: #d0dca1; } 
+
+
+

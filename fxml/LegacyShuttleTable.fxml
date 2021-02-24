@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.geometry.Insets?>
+
+<ScrollPane fx:id="scrollPane" fitToHeight="true" fitToWidth="true" style="-fx-padding: 0;" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.251" fx:controller="org.dwm.dashboard.controllers.LegacyShuttleTableController">
+    <content>
+       <TableView fx:id="tblQueue" editable="true" >
+         <columns>
+             <TableColumn fx:id="colPriority" prefWidth="75.0" text="Pty" />
+             <TableColumn fx:id="colOrderNumber" prefWidth="75.0" text="Order" />
+             <TableColumn fx:id="colWLU" prefWidth="75.0" text="WLU" />
+             <TableColumn fx:id="colPartNumber" prefWidth="75.0" text="Part Number" />
+             <TableColumn fx:id="colOrderQuantity" prefWidth="75.0" text="Order Qty" />
+             <TableColumn fx:id="colWave" prefWidth="75.0" text="Wave" />
+             <TableColumn fx:id="colStatus" prefWidth="75.0" text="Status" />
+             <TableColumn fx:id="colUser" prefWidth="75.0" text="User" />
+             <TableColumn fx:id="colType" prefWidth="75.0" text="Type" />
+             <TableColumn fx:id="colCustomer" prefWidth="75.0" text="Customer" />
+             <TableColumn fx:id="colLine" prefWidth="75.0" text="Line" />
+             <TableColumn fx:id="colReel" prefWidth="75.0" text="Reel" />
+             <TableColumn fx:id="colLicensePlate" minWidth="125.0" prefWidth="125.0" styleClass="cell" text="LP" visible="false" />
+             <TableColumn fx:id="colOnHandQuantity" prefWidth="75.0" styleClass="cell" text="O/H Qty" visible="false" />
+         </columns>
+   
+       </TableView>
+       </content>
+</ScrollPane>

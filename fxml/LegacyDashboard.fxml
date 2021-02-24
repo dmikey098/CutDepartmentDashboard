@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ButtonBar?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.SeparatorMenuItem?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane fx:id="app" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" stylesheets="@../styles/LegacyDashboard.css" xmlns="http://javafx.com/javafx/8.0.261" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.dwm.dashboard.controllers.LegacyDashboardController">
+   <bottom>
+      <Pane maxHeight="25.0" minHeight="20.0" prefHeight="0.0" prefWidth="660.0" style="-fx-border-insets: 0; -fx-border-width: 1px; -fx-border-color: gray lightgray lightgray black;" BorderPane.alignment="CENTER">
+         <children>
+            <Label fx:id="lblStatusBar" layoutX="8.0" prefHeight="17.0" prefWidth="1000.0" text="Label" />
+         </children></Pane>
+   </bottom>
+   <top>
+      <MenuBar BorderPane.alignment="CENTER">
+        <menus>
+          <Menu disable="false" mnemonicParsing="false" text="File">
+            <items>
+                  <!--<MenuItem mnemonicParsing="false" text="Update Pick Totals" />-->
+                  <!--<SeparatorMenuItem mnemonicParsing="false" />-->
+                  <!--<MenuItem mnemonicParsing="false" onAction="#printCutTable" text="Print Cuts" />-->
+                  <MenuItem mnemonicParsing="false" onAction="#exportCuts" text="Export Cuts" />
+                  <MenuItem mnemonicParsing="false" onAction="#exportReplens" text="Export Replens" />
+                  <MenuItem mnemonicParsing="false" onAction="#exportPNCs" text="Export PNCs" />
+                  <MenuItem mnemonicParsing="false" onAction="#exportTotals" text="Export Totals" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                  <!--<MenuItem mnemonicParsing="false" onAction="#updateNotesStart" text="Update Notes Start" />-->
+                  <!--<MenuItem mnemonicParsing="false" onAction="#updateNotesEnd" text="Update Notes End" />-->
+                  <!--<SeparatorMenuItem mnemonicParsing="false" />-->
+                  <MenuItem mnemonicParsing="false" onAction="#close" text="Exit                       " />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Tools">
+            <items>
+                <MenuItem mnemonicParsing="false" onAction="#openCalculator" text="Calculator                 " />
+                <MenuItem fx:id="mitmCrdChecker" mnemonicParsing="false" onAction="#openCRDChecker" text="CRD" visible="false" />
+            </items>
+          </Menu>
+          <Menu disable="false" mnemonicParsing="false" text="Help">
+            <items>
+              <MenuItem mnemonicParsing="false" onAction="#openAboutDialog" text="About                      " />
+            </items>
+          </Menu>
+        </menus>
+      </MenuBar>
+   </top>
+   <center>
+      <VBox fx:id="vBox" BorderPane.alignment="CENTER">
+         <children>
+            <AnchorPane prefHeight="200.0" prefWidth="200.0">
+               <children>
+                   <GridPane fx:id="labelGrid" layoutX="14.0" layoutY="14.0" prefHeight="144.0" prefWidth="600.0">
+                    <columnConstraints>
+                        <ColumnConstraints hgrow="SOMETIMES" percentWidth="12.5" />
+                        <ColumnConstraints hgrow="SOMETIMES" percentWidth="8" />
+                        <ColumnConstraints hgrow="SOMETIMES" percentWidth="12.5" />
+                        <ColumnConstraints hgrow="SOMETIMES" percentWidth="8" />
+                        <ColumnConstraints hgrow="SOMETIMES" percentWidth="12.5" />
+                        <ColumnConstraints hgrow="SOMETIMES" percentWidth="8" />
+                        <ColumnConstraints hgrow="SOMETIMES" percentWidth="12.5" />
+                        <ColumnConstraints hgrow="SOMETIMES" percentWidth="8" />
+                    </columnConstraints>
+                    <rowConstraints>
+                        <RowConstraints percentHeight="16.67" vgrow="SOMETIMES" />
+                      	<RowConstraints percentHeight="16.67" vgrow="SOMETIMES" />
+                        <RowConstraints percentHeight="16.67" vgrow="SOMETIMES" />
+                        <RowConstraints percentHeight="16.67" vgrow="SOMETIMES" />
+                        <RowConstraints percentHeight="16.67" vgrow="SOMETIMES" />
+                      	<RowConstraints percentHeight="16.67" vgrow="SOMETIMES" />
+                        <RowConstraints />
+                    </rowConstraints>
+                     <children>
+                        <Label alignment="CENTER" prefHeight="17.0" prefWidth="995.0" style="-fx-border-style: hidden hidden solid hidden; -fx-border-width: 1; -fx-border-color: black;" text="Totals" GridPane.columnSpan="8" />
+                        <Label alignment="CENTER" prefHeight="17.0" prefWidth="119.0" style="-fx-border-style: hidden hidden solid hidden;" text="Pick" visible="false" GridPane.columnIndex="6" GridPane.columnSpan="2" />
+                     
+                     
+                         <Label maxWidth="100.0" minWidth="-Infinity" onMouseClicked="#filterCuts" prefHeight="17.0" prefWidth="70.0" text="Cuts:" GridPane.columnIndex="0" GridPane.rowIndex="1">
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor>
+                        </Label>
+                        <Label maxWidth="100.0" minWidth="-Infinity" onMouseClicked="#filterSPs" prefHeight="17.0" prefWidth="50.0" text="SPs:" GridPane.columnIndex="0" GridPane.rowIndex="2">
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor>
+                        </Label>
+                        <Label maxWidth="100.0" minWidth="-Infinity" prefHeight="17.0" prefWidth="50.0" text="Total:" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+                        <Label maxWidth="100.0" minWidth="-Infinity" onMouseClicked="#filterMultiCuts" prefHeight="17.0" prefWidth="50.0" text="Reels: " GridPane.rowIndex="4">
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor>
+                        </Label>
+                        
+                        <Label maxWidth="100.0" minWidth="-Infinity" onMouseClicked="#filterCutsOver2500" prefHeight="17.0" prefWidth="50.0" text="&gt;= 2500':" GridPane.columnIndex="0" GridPane.rowIndex="5">
+                            <cursor>
+                                <Cursor fx:constant="HAND" />
+                            </cursor>
+                        </Label>
+                        <Label maxWidth="100.0" minWidth="-Infinity" onMouseClicked="#filterCutsOver5000" prefHeight="17.0" prefWidth="50.0" text="&gt;= 5000':" GridPane.columnIndex="0" GridPane.rowIndex="6">
+                            <cursor>
+                                <Cursor fx:constant="HAND" />
+                            </cursor>
+                        </Label>
+                        
+                        <Label fx:id="lblCutCount" maxWidth="100.0" minWidth="-Infinity" prefHeight="17.0" prefWidth="50.0" text="CUT_VALUE" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <Label fx:id="lblSPCount" maxWidth="100.0" minWidth="-Infinity" prefHeight="17.0" prefWidth="50.0" text="SP_VALUE" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                        <Label fx:id="lblCutTotal" maxWidth="100.0" minWidth="-Infinity" prefHeight="17.0" prefWidth="50.0" text="TOTAL_VALUE" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                        <Label fx:id="lblReelCount" maxWidth="100.0" minWidth="-Infinity" prefHeight="17.0" prefWidth="50.0" text="REEL_VALUE" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                        <Label fx:id="lblCutsOver2500" maxWidth="100.0" minWidth="-Infinity" prefHeight="17.0" prefWidth="50.0" text="2500_VALUE" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                        <Label fx:id="lblCutsOver5000" maxWidth="100.0" minWidth="-Infinity" prefHeight="17.0" prefWidth="50.0" text="5000_VALUE" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+                        
+                        <Label minWidth="-Infinity" onMouseClicked="#filterBW" text="BW: " GridPane.columnIndex="2" GridPane.rowIndex="1">
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor>
+                        </Label>
+                        <Label minWidth="-Infinity" onMouseClicked="#filterCord" text="Cord: " GridPane.columnIndex="2" GridPane.rowIndex="2">
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor>
+                        </Label>
+                        <Label minWidth="-Infinity" onMouseClicked="#filterFiber" text="Fiber: " GridPane.columnIndex="2" GridPane.rowIndex="3">
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor>
+                        </Label>
+                        <Label minWidth="-Infinity" onMouseClicked="#filterPV" text="PV: " GridPane.columnIndex="2" GridPane.rowIndex="4">
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor>
+                        </Label>
+                        
+                        
+                        <Label fx:id="lblBWCuts" minWidth="-Infinity" text="BW_VALUE" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                        <Label fx:id="lblCordCuts" minWidth="-Infinity" text="CORD_VALUE" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+                        <Label fx:id="lblFiberCuts" minWidth="-Infinity" text="FIBER_VALUE" GridPane.columnIndex="3" GridPane.rowIndex="3" />
+                        <Label fx:id="lblPVCuts" minWidth="-Infinity" text="PV_VALUE" GridPane.columnIndex="3" GridPane.rowIndex="4" />
+                        
+                        
+                        <Label minWidth="-Infinity" prefHeight="17.0" prefWidth="80.0" text="Shuttles:" GridPane.columnIndex="4" GridPane.rowIndex="1" />
+                        <Label minWidth="-Infinity" prefHeight="17.0" prefWidth="80.0" text="Replens:" GridPane.columnIndex="4" GridPane.rowIndex="2" />
+                        <Label minWidth="-Infinity" onMouseClicked="#filterCradles" prefHeight="17.0" prefWidth="80.0" text="Cradles:" GridPane.columnIndex="4" GridPane.rowIndex="3">
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor>
+                        </Label> 
+                        <Label minWidth="-Infinity" prefHeight="17.0" prefWidth="80.0" text="Proj Cradles:" GridPane.columnIndex="4" GridPane.rowIndex="4" />
+                        
+                        <Label fx:id="lblShuttles" minWidth="-Infinity" prefHeight="17.0" prefWidth="50.0" text="SHUTTLE_VALUE" GridPane.columnIndex="5" GridPane.rowIndex="1" />
+                        <Label fx:id="lblReplens" minWidth="-Infinity" prefHeight="17.0" prefWidth="50.0" text="REPLEN_VALUE" GridPane.columnIndex="5" GridPane.rowIndex="2" />
+                        <Label fx:id="lblCradles" minWidth="-Infinity" prefHeight="17.0" prefWidth="50.0" text="CRADLE_VALUE" GridPane.columnIndex="5" GridPane.rowIndex="3" />
+                        <Label fx:id="lblProjCradles" minWidth="-Infinity" prefHeight="17.0" prefWidth="50.0" text="PROJ_VALUE" GridPane.columnIndex="5" GridPane.rowIndex="4" />
+                        
+                        <Label minWidth="-Infinity" prefHeight="17.0" prefWidth="80.0" text="PNC:" GridPane.columnIndex="6" GridPane.rowIndex="1" />
+                        <Label minWidth="-Infinity" prefHeight="17.0" prefWidth="80.0" text="Case:" GridPane.columnIndex="6" GridPane.rowIndex="2" />
+                        <Label minWidth="-Infinity" prefHeight="17.0" prefWidth="80.0" text="Pallet:" GridPane.columnIndex="6" GridPane.rowIndex="3" />
+                        <Label minWidth="-Infinity" prefHeight="17.0" prefWidth="80.0" text="UPS:" GridPane.columnIndex="6" GridPane.rowIndex="4" />
+                        <Label minWidth="-Infinity" prefHeight="17.0" prefWidth="80.0" text="Grainger:" GridPane.columnIndex="6" GridPane.rowIndex="5" />
+                        
+                        <Label fx:id="lblPNCTotal" minWidth="-Infinity" prefHeight="17.0" prefWidth="50.0" text="PNC_VALUE" GridPane.columnIndex="7" GridPane.rowIndex="1" />
+                        <Label fx:id="lblCase" minWidth="-Infinity" prefHeight="17.0" prefWidth="50.0" text="CASE_VALUE" GridPane.columnIndex="7" GridPane.rowIndex="2" />
+                        <Label fx:id="lblPallet" minWidth="-Infinity" prefHeight="17.0" prefWidth="50.0" text="PALLET_VALUE" GridPane.columnIndex="7" GridPane.rowIndex="3" />
+                        <Label fx:id="lblUPS" minWidth="-Infinity" prefHeight="17.0" prefWidth="50.0" text="UPS_VALUE" GridPane.columnIndex="7" GridPane.rowIndex="4" />
+                        <Label fx:id="lblGrainger" minWidth="-Infinity" prefHeight="17.0" prefWidth="50.0" text="GRAINGER_VALUE" GridPane.columnIndex="7" GridPane.rowIndex="5" />
+                        <Label fx:id="lblCRDCount" minWidth="-Infinity" prefHeight="17.0" prefWidth="50.0" text="CRD_VALUE" visible="false" GridPane.columnIndex="2" GridPane.rowIndex="5" />
+                        
+                        
+                     </children>
+                  </GridPane>
+            <fx:include fx:id="donutChart" source="LegacyDonutChart.fxml" AnchorPane.rightAnchor="50.0" />
+            </children>
+            </AnchorPane>
+            <ButtonBar buttonOrder="U+L_HE+FBIX_NCYOA_R" prefHeight="40.0" prefWidth="757.0">
+              <buttons>
+                <Button mnemonicParsing="false" onAction="#refresh" text="Refresh" />
+                  <TextField fx:id="txtFromPriority" />
+                  <TextField fx:id="txtToPriority" />
+                  <Button fx:id="btnFilter" mnemonicParsing="false" onAction="#filterByPriorityRange" text="Filter" />
+                  <Button mnemonicParsing="false" onAction="#clearFilter" text="Clear" />
+              </buttons>
+               <VBox.margin>
+                  <Insets bottom="5.0" />
+               </VBox.margin>
+            </ButtonBar>
+            <TabPane fx:id="tabPane" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE">
+              <tabs>
+                <Tab closable="false" text="        Cuts        ">
+                     <content>
+                        <fx:include fx:id="cutTable" source="LegacyCutTable.fxml" />
+                     </content>
+                </Tab>
+                <Tab closable="false" text="        Shuttles        ">
+                     <content>
+                        <fx:include fx:id="shuttleTable" source="LegacyShuttleTable.fxml" />
+                     </content>
+                </Tab>
+                <Tab closable="false" text="        Replens        ">
+                     <content>
+                        <fx:include fx:id="replenTable" source="LegacyReplenTable.fxml" />
+                     </content>
+                </Tab>
+                  <Tab closable="false" disable="true" text="         Utilities        ">
+                    <content>
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="378.0" prefWidth="1029.0">
+                           <children>
+                              <TextField fx:id="txtPNForLabelFormat" layoutX="138.0" layoutY="38.0" />
+                              <Label layoutX="32.0" layoutY="42.0" prefHeight="17.0" prefWidth="94.0" text="Part Number:" />
+                              <Label alignment="CENTER" layoutX="34.0" layoutY="14.0" prefHeight="17.0" prefWidth="252.0" text="Label Format" />
+                              <Button fx:id="btnGetLabelFormat" layoutX="235.0" layoutY="73.0" mnemonicParsing="false" onAction="#getLabelFormat" prefHeight="25.0" prefWidth="51.0" text="Run" />
+                              <Label fx:id="lblLabelFormatResults" layoutX="79.0" layoutY="78.0" prefHeight="17.0" prefWidth="144.0" />
+                           </children>
+                        </AnchorPane>
+                    </content>
+                  </Tab>
+              </tabs>
+            </TabPane>
+         </children>
+      </VBox>
+   </center>
+</BorderPane>
