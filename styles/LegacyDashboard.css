@@ -8,12 +8,13 @@ and open the template in the editor.
     Author     : mikesda001
 */
 
+
 #labelGrid Label {
 	-fx-font-size: 11pt;
 }
 
 #labelGrid {
-	-fx-pref-width: 800px;
+	-fx-pref-width: 600px;
 }
 
 .bw {

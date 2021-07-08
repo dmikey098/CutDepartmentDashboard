@@ -10,19 +10,28 @@ and open the template in the editor.
 
 .table-row-cell:selected { -fx-background-color: grey }
 
-
+.flag-quantity .quantity { -fx-background-color: orange; }
 
 .sp { -fx-background-color: yellow; }
 
 .red { -fx-background-color: red; }
 
+.flag-k-status .status { -fx-background-color: red; }
 
 .flag-customer .customer {
     -fx-background-color: red;
 }
 
+.flag-carrier .carrier {
+	-fx-background-color: red;
+}
+
 .flag-reel .reel {
     -fx-background-color: red;
+}
+
+.flag-standard {
+	-fx-background-color: orange;
 }
 
 .flag-date .ship-date {
