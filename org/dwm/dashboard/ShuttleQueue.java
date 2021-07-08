@@ -8,6 +8,9 @@ package org.dwm.dashboard;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
+import org.dwm.dashboard.bean.QueueItem;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -16,9 +19,8 @@ import javafx.collections.ObservableList;
  *
  * @author Daniel Mikesell
  */
-public class ShuttleQueue implements Queue {
+public class ShuttleQueue {
 
-    @Override
     public ObservableList<QueueItem> getAllItems() {
         ObservableList<QueueItem> allItems = FXCollections.observableArrayList();
         

@@ -11,6 +11,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+
+import org.dwm.dashboard.bean.QueueItem;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -18,14 +21,14 @@ import javafx.collections.ObservableList;
  *
  * @author Daniel Mikesell
  */
-public class CutQueue implements Queue {
+public class CutQueue {
     private  ArrayList<String> duplicateLPs = new ArrayList<>();
     
     public ArrayList<String> getDuplicatePlates() {
         return duplicateLPs;
     }
     
-    @Override
+    
     public ObservableList<QueueItem> getAllItems() {
         ObservableList<QueueItem> allItems = FXCollections.observableArrayList();
         
@@ -57,14 +60,21 @@ public class CutQueue implements Queue {
                 
                 
                 item.customerId.set((rs.getString(17) != null) ? rs.getString(17).trim() : "");
+                
                 item.ctrlNum.set((rs.getString(18) != null) ? rs.getString(18).trim() : "");
                 item.parcelNum.set((rs.getString(19) != null) ? rs.getString(19).trim() : "");
-                if(dups.containsKey(item.licensePlate.get())) { // && !duplicateLPs.contains(item.getLicensePlate())) {
-                    duplicateLPs.add(item.licensePlate.get());
-                } else {
-                    dups.put(item.licensePlate.get(), "");
-                }   
                 
+                if(!item.status.equals("R")) {
+	                if(dups.containsKey(item.licensePlate.get())) { // && !duplicateLPs.contains(item.getLicensePlate())) {
+	                    duplicateLPs.add(item.licensePlate.get());
+	                } else {
+	                    dups.put(item.licensePlate.get(), "");
+	                }   
+                }
+                
+                item.availStandardLength.set(rs.getInt(21));
+                item.dockArea.set((rs.getString(22) != null) ? rs.getString(22).trim() : "UNK");
+                                
                 allItems.add(item);
             }
         } catch (SQLException ex) {

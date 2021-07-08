@@ -26,7 +26,6 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbookFactory;
 import org.openxmlformats.schemas.spreadsheetml.x2006.main.CTTable;
 import org.openxmlformats.schemas.spreadsheetml.x2006.main.CTTableColumn;
 import org.openxmlformats.schemas.spreadsheetml.x2006.main.CTTableColumns;
-import org.openxmlformats.schemas.spreadsheetml.x2006.main.CTTableStyleInfo;
 
 /**
  *
@@ -205,7 +204,14 @@ public class ExcelWriter {
             int cellNum = 0;
             int colCount = colNames.length;
             
-            String strCol = Character.toString((char) (colCount + 64));
+            int div = Math.floorDiv(colCount, 26);
+            int mod = Math.floorMod(colCount, 26);
+            
+            String strCol0 = (div > 0) ? Character.toString((char) (div + 64)) : "";
+            String strCol = Character.toString((char) (mod + 64));
+                        
+            strCol = strCol0 + strCol;
+            
             String strRow = Integer.toString(rows.size() + 1);
 
             XSSFSheet sheet1 = wb.createSheet("Query Results");
@@ -241,6 +247,7 @@ public class ExcelWriter {
                 
                 for (int i = 0; i < row.size(); i++) {
                     xlRow.createCell(cellNum++).setCellValue(row.get(i));
+                	
                 }
             }
 

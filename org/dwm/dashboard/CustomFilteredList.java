@@ -6,6 +6,9 @@
 package org.dwm.dashboard;
 
 import java.util.function.Predicate;
+
+import org.dwm.dashboard.bean.QueueItem;
+
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;

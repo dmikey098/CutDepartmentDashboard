@@ -15,9 +15,9 @@ public class DatabaseConnection {
     private static Connection conn = null; 
     
     static {
-        String systemName = SYSTEM_NAME; 
-        String userid = USER_ID;
-        String password = PASSWORD;
+        String systemName = "HQPLANO01"; //Credentials.getSystemName(); 
+        String userid = "LBQUTM1"; //Credentials.getUserid(); 
+        String password = "GENERAL1"; //Credentials.getPassword();
         
         try {
             conn = new AS400JDBCDataSource(new AS400(systemName, userid, password)).getConnection();

@@ -15,7 +15,17 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.dwm.dashboard.bean.HistoryItem;
+import org.dwm.dashboard.bean.QueueItemCount;
+import org.dwm.dashboard.bean.Total;
+import org.dwm.dashboard.bean.User;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -55,6 +65,44 @@ public class QueryFunctions {
         }
         
         return version;
+    }
+    
+    public static String getCheckDigit(String asl, String bay, String lvl) throws FileNotFoundException, IOException {
+    	String checkDigit = "Unknown";
+        
+    	String sqlStmt = readSQLFile("/sql/CheckDigit.sql");
+        PreparedStatement ps = null;
+        
+        try {
+            ps = conn.prepareStatement(sqlStmt);
+            ps.setString(1, asl);
+            ps.setString(2, bay);
+            ps.setString(3, lvl);
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        
+        try(ResultSet rs = ps.executeQuery()) {
+        	if(rs.isBeforeFirst()) {
+        		rs.next();
+            	checkDigit = rs.getString(1);
+        	}
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        
+        return checkDigit;
+    }
+    
+    public static ResultSet getAllCases() throws SQLException {
+        String sqlStmt = "";
+        try {
+            sqlStmt = readSQLFile("/sql/CaseQueue.sql");
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+        
+        return query(sqlStmt);        
     }
     
     public static void wflod() throws IOException  {
@@ -143,7 +191,7 @@ public class QueryFunctions {
         
         try {
             ps = conn.prepareStatement(sqlStmt);
-            ps.setString(1, AppManager.getPNCFromDate());
+            ps.setString(1, AppManager.PNC_DATE);
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
@@ -339,11 +387,18 @@ public class QueryFunctions {
             ps = conn.prepareStatement(sqlStmt);
             ps.setInt(1, AppManager.getStraightPullQuantity());
             ps.setInt(2, AppManager.getStraightPullQuantity());
-            ps.setInt(3, Queues.getFilteredReplens().get(0).priority.get());
-            ps.setInt(4, Queues.getFilteredReplens().get(Queues.getFilteredReplens().size() - 1).priority.get());
+            //ps.setInt(3, 18);
+            //ps.setInt(4, 18);
+            //ps.setInt(3, 70000);
+            //ps.setInt(4, 89999);
+            ps.setInt(3, QueueManager.getFilteredReplens().get(0).priority.get());
+            ps.setInt(4, QueueManager.getFilteredReplens().get(QueueManager.getFilteredReplens().size() - 1).priority.get());
+            
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
+        
+        
         
         try(ResultSet rs = ps.executeQuery()) {
         	while(rs.next()) {
@@ -364,6 +419,87 @@ public class QueryFunctions {
     	return rows;
     }
     
+    public static ObservableList<Total> getTotalsForUser(String user) {
+    	ObservableList<Total> totals = FXCollections.observableArrayList();
+    	String sqlStmt = null;
+    	PreparedStatement ps = null;
+    	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("1YYMMdd");
+    	String today = formatter.format(LocalDate.now());
+    	String yesterday = formatter.format(LocalDate.now().minusDays(1));
+    	
+    	try {
+            sqlStmt = QueryFunctions.readSQLFile("/sql/TotalsForUser.sql");
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    	
+    	try {
+            ps = conn.prepareStatement(sqlStmt);
+            ps.setString(1, user.toUpperCase());
+            ps.setInt(2, Integer.parseInt(yesterday));
+            ps.setInt(3, Integer.parseInt(today));
+            ps.setInt(4, Integer.parseInt(today));
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    	
+    	try(ResultSet rs = ps.executeQuery()) {
+            while(rs.next()) {
+                Total total = new Total();
+                total.setUser(rs.getString(1)); 
+                total.setTeam(rs.getString(2)); 
+                total.setTotal(rs.getInt(3)); 
+                totals.add(total);
+            }
+        } catch (SQLException | NullPointerException ex) {
+            ex.printStackTrace();
+        }
+        
+        return totals;   
+    }
+    
+    public static Total getTotalForUserAndTeam(String user, String team) {
+    	
+    	String sqlStmt = null;
+    	PreparedStatement ps = null;
+    	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("1YYMMdd");
+    	String today = formatter.format(LocalDate.now());
+    	String yesterday = formatter.format(LocalDate.now().minusDays(1));
+    	
+    	try {
+            sqlStmt = QueryFunctions.readSQLFile("/sql/TotalsForUserAndTeam.sql");
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    	
+    	try {
+            ps = conn.prepareStatement(sqlStmt);
+            ps.setString(1, user);
+            ps.setInt(2, Integer.parseInt(yesterday));
+            ps.setInt(3, Integer.parseInt(today));
+            ps.setInt(4, Integer.parseInt(today));
+            ps.setString(5, team);
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    	
+    	Total total = new Total();
+    	
+    	try(ResultSet rs = ps.executeQuery()) {
+            if(rs.isBeforeFirst()) {
+            	rs.next();
+                total.setUser(rs.getString(1)); 
+                total.setTeam(rs.getString(2)); 
+                total.setTotal(rs.getInt(3)); 
+                
+            }
+        } catch (SQLException | NullPointerException ex) {
+            ex.printStackTrace();
+        }
+        
+        return total;   
+    }
+     
     public static ObservableList<UserTotal> getUserTotalsForShift() {
         ObservableList<UserTotal> rows = FXCollections.observableArrayList();
         String sqlStmt = null;
@@ -444,7 +580,7 @@ public class QueryFunctions {
         
         try {
             ps = conn.prepareStatement(QueryFunctions.readSQLFile("/sql/PNCExport.sql"));
-            ps.setString(1, AppManager.getPNCFromDate());
+            ps.setString(1, AppManager.PNC_DATE);
         } catch (IOException | SQLException ex) {
             ex.printStackTrace();
         }
@@ -461,7 +597,7 @@ public class QueryFunctions {
                     columns[i - 1] = md.getColumnName(i);
                     row.add(rs.getString(i));
                 }
-
+                
                 rows.add(row);
             }
         } catch (SQLException ex) {
@@ -498,6 +634,71 @@ public class QueryFunctions {
         return access;
     }
     
+    
+    public static ObservableList<User> getUserTeams() {
+    	ObservableList<User> users = FXCollections.observableArrayList();
+    	
+    	try (ResultSet rs = query(QueryFunctions.readSQLFile("/sql/Teams.sql"))) {
+            while(rs.next()) {
+            	users.add(new User(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getInt(6)));
+            	
+            	
+            }
+        } catch (SQLException | IOException ex) {
+            ex.printStackTrace();
+        } 		
+    	
+    	return users;
+    }
+    
+    public static ObservableList<QueueItemCount> getOrderCounts() {
+		ObservableList<QueueItemCount> items = FXCollections.observableArrayList();
+    	
+		Map<String, QueueItemCount> map = new HashMap<>();
+		
+		
+    	
+    	try (ResultSet rs = query(QueryFunctions.readSQLFile("/sql/OrderCount.sql"))) {
+            while(rs.next()) {
+            	QueueItemCount item = null;
+            	
+            	if(map.containsKey(rs.getString(2))) {
+            		item = map.get(rs.getString(2));
+            		item.setCount(item.getCount() + rs.getInt(5));
+            		//if(rs.getString(3).equals("R") || rs.getString(4))
+            	} else {
+            		item = new QueueItemCount();
+            		item.setPriority(rs.getInt(1));
+            		item.setOrderNumber(rs.getString(2).trim());
+            		//item.setStatus(rs.getString(3));
+            		item.setCount(rs.getInt(5));
+            		map.put(item.getOrderNumber(), item);
+            	}
+            	
+            	if(rs.getString(3).equals("R") || rs.getString(4).trim().equals("W.P&D")) {
+            		item.setCompletedCuts(true);
+            	} 
+            	
+            	if(!rs.getString(3).equals("R") && !rs.getString(4).trim().equals("W.P&D")) {
+            		item.setComplete(false);
+            	}
+            	
+            	
+            	
+            	
+            	
+            }
+        } catch (SQLException | IOException ex) {
+            ex.printStackTrace();
+        } 		
+    	
+    	map.forEach((k, v) -> {
+    		items.add(v);
+    		
+    	});
+    	
+    	return items;
+    }
     
 }
 

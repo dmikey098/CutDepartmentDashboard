@@ -3,128 +3,132 @@ package org.dwm.dashboard;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDateTime;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import javafx.application.Application;
-import javafx.application.Platform;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
-import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 public class MainApp extends Application {
-	public static String version = "1.0.4"; 
-	
+	public static final String VERSION = "1.0.13"; 
+	public static final String IN_DEV_VERSION = "1.0.13-A001";
+	public static final boolean IS_SNAPSHOT = true;
 	
 	public static void main(String[] args) {
-		
 		if(!verifyLogin()) { System.exit(0); }
 		launch(args);
-
 	}
 	
 	private static boolean verifyLogin() {
-		boolean b = false;
-		
 		String username = System.getProperty("user.name");
         int opt = QueryFunctions.getAccessForUser("OPTION");
         AppManager.loggedIn = true;
+        AppManager.userProperty().set(username.toUpperCase());
         
-        if(opt == 1) {
-            int access = QueryFunctions.getAccessForUser(username.toUpperCase());
         
-            if(access != 0) {
-            	b = true;
-            }
-        } else {
-        	b = true;
+        int access = QueryFunctions.getAccessForUser(username.toUpperCase());
+        AppManager.accessProperty().set(access);
+        
+        if(opt == 0) {
+        	AppManager.accessRequiredProperty().set(false);
         }
-		
-        return b;
+        
+        /*
+        System.out.println("User: " + username);
+        System.out.println("Access: " + access);
+        System.out.println("Opt: " + opt);
+        System.out.println("isAccessRequired: " + AppManager.isAccessRequired());
+        */
+        
+        return true;
 	}
 
 	@Override
 	public void start(Stage mainStage) throws Exception {
-		FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/LegacyDashboard.fxml"));
-		Parent root = null;
-		try {
-		    root = loader.load();
-		} catch (IOException ex) {
-		    ex.printStackTrace();
-		}
-	        
 		
-        mainStage.setTitle("Dashboard v" + version);
-        mainStage.setMaximized(true);
+		AppManager.setMainStage(mainStage);
+		try {
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/LegacyDashboard.fxml"));
+			Parent root = null;
+			try {
+			    root = loader.load();
+			} catch (IOException ex) {
+			    ex.printStackTrace();
+			}
+		        
+			String title = "Dashboard v" + VERSION; 
+			title += (IS_SNAPSHOT) ? "-SNAPSHOT" : "";
+	        mainStage.setTitle(title);
+	        mainStage.setScene(new Scene(root));
+	        mainStage.getIcons().add(AppManager.getIcon());
+	        
+	        mainStage.setMaximized(true);
+	        mainStage.setMinHeight(600);
+	        mainStage.setMinWidth(860);
+	        
+	        
+	        
+	        mainStage.show();
+        } catch (Throwable t) {
+        	t.printStackTrace();
+        }
+		
+        //Update launcher
+        //new Thread(() -> {
+        //	LauncherUpdater.update();
+		//}).start();
         
-        mainStage.setScene(new Scene(root));
-        //mainStage.initStyle(StageStyle.UNDECORATED);
-                
-        mainStage.getIcons().add(AppManager.getIcon());
-        
-        //mainStage.setX(bounds.getMinX());
-        //mainStage.setY(bounds.getMinY());
-        //mainStage.setWidth(bounds.getWidth());
-        //mainStage.setHeight(bounds.getHeight());
-        //AppManager.setMainStage(mainStage);
-        
-        mainStage.show();
-        addRefreshTimer();
-	}
+
+		/*
+		Listener l = new Listener("A", "SELECT QHSTS FROM PROBASEF.WFWQH WHERE QHCTRL = 60984701");
+		l.getBool().addListener((obs, oldValue, newValue) -> {
+			JOptionPane.showMessageDialog(null, "The status has changed...");
+		});
+		l.start();
+		*/
+		
+    }
 
 	
 	@Override
     public void stop(){
-        System.exit(0);
+		System.exit(0);
     }
 
-    public void addRefreshTimer() {
-        //-----------------------------------
-        //Auto-refresh timer
-        //-----------------------------------
-        Timer timer = new Timer();
-        timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                AppManager.refresh();
-                
-                //Queues.filterByPriorityRange(0, 99);
-            }
-        }, 0, 1800000);
-    }
-    
-    public void addTimer() {
-        //-----------------------------------
-        //Auto-refresh timer
-        //-----------------------------------
-        Timer timer = new Timer();
-        timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                Platform.runLater(() -> {
-                    System.out.println("Record check"); //debugging
-                    
-                    try(ResultSet rs = QueryFunctions.query("SELECT QHSTS, QHAUSR FROM PROBASEF.WFWQH WHERE QHCTRL = 60285471")) {
-                        while(rs.next()) {
-                            if(!rs.getString(1).equals("A")) {
-                                String strMsg = "NOT ACTIVE ANYMORE \n" + rs.getString(2) + "\n" + LocalDateTime.now().toString();
-                                
-                                Alert alert = new Alert(Alert.AlertType.INFORMATION, strMsg, ButtonType.OK);
-                                alert.showAndWait();
-                            }
-                        }
-                    } catch (SQLException ex) {
-                        
-                    }
-                    
-                    
-                });
-            }
-        }, 0, 60000);
+    class Listener extends Thread {
+    	String oldValue = "";
+    	String sqlStmt = "";
+    	BooleanProperty b = new SimpleBooleanProperty(false);
+    	
+    	Listener(String oldValue, String sqlStmt) {
+    		this.oldValue = oldValue;
+    		this.sqlStmt = sqlStmt;
+    	}
+    	
+    	public BooleanProperty getBool() {
+    		return b;
+    	}
+
+    	public void run() {
+    		while (true) {
+    			try (ResultSet rs = QueryFunctions.query(sqlStmt)) {
+    				rs.next();
+    				if(!rs.getString(1).equals(oldValue)) {
+    					b.set(true);
+    					return;
+    				}
+    				
+    				Thread.sleep(500);
+    			} catch (SQLException sqle) {
+    				sqle.printStackTrace();
+    			} catch (InterruptedException ie) {
+    				ie.printStackTrace();
+    			}
+    		}
+    	}
+
     }
 }

@@ -5,28 +5,17 @@
  */
 package org.dwm.dashboard;
 
-import org.dwm.dashboard.controllers.CRDController;
-
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.ZonedDateTime;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javafx.application.Platform;
+import java.util.Map;
+
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
@@ -49,83 +38,70 @@ import javafx.stage.Stage;
  * @author Daniel Mikesell
  */
 public class AppManager {
-	private static String strIconFile = "/images/icon.png";
-    public static StringProperty lastRefreshedProperty = new SimpleStringProperty("");
-    public static StringProperty searchBoxTextProperty = new SimpleStringProperty();
-    public static StringProperty statusTextProperty = new SimpleStringProperty("test");
+	public static final String ICON_FILE = "/images/icon.png";
+	public static final String ICON_FILE_SNAPSHOT = "/images/icon-snapshot.png";
+	public static final String PNC_DATE = "1210101";
+	public static final int PNC_OFFSET = -51000;
+	
+	private static BooleanProperty accessRequired = new SimpleBooleanProperty(true);
+	
+	public static StringProperty lastRefreshedProperty = new SimpleStringProperty("");
+    public static StringProperty statusTextProperty = new SimpleStringProperty("");
+    private static StringProperty searchBoxTextProperty = new SimpleStringProperty();
     
-    
-    private final StringProperty statusBar = new SimpleStringProperty("");
-    public static IntegerProperty pncTotal = new SimpleIntegerProperty();
-    public static IntegerProperty crdCount = new SimpleIntegerProperty();
-    public static IntegerProperty caseCount = new SimpleIntegerProperty();
-    public static IntegerProperty palletCount = new SimpleIntegerProperty();
-    public static IntegerProperty upsCount = new SimpleIntegerProperty();
-    public static IntegerProperty graingerCount = new SimpleIntegerProperty();
-    
-    
-    public static IntegerProperty cutCount = new SimpleIntegerProperty(1); 
-    public static IntegerProperty spCount = new SimpleIntegerProperty(1); 
-    public static IntegerProperty bwCountProperty = new SimpleIntegerProperty(1);
-    public static IntegerProperty cordCountProperty = new SimpleIntegerProperty(1);
-    public static IntegerProperty fiberCountProperty = new SimpleIntegerProperty(1);
-    public static IntegerProperty pvCountProperty = new SimpleIntegerProperty(1);
-    public static ArrayList<String> duplicateLPs = new ArrayList<>();
-    public static IntegerProperty totalProperty = new SimpleIntegerProperty(1);
-    public static IntegerProperty reelCountProperty = new SimpleIntegerProperty();
-    public static ObjectProperty<ZonedDateTime> lastRefreshed = new SimpleObjectProperty<ZonedDateTime>(ZonedDateTime.now());
-    
-    private static AppManager INSTANCE;
-    public HashMap<String, Object> options = new HashMap<>();
-    private static ObservableList<HistoryItem> invHistory = FXCollections.observableArrayList();
     private static ObservableList<UserTotal> userTotals = FXCollections.observableArrayList();
-    private static Stage mainStage;
-    private static String pncFromDate = "1210101";
-    public static boolean adminMode = false;
     
+    private static Stage mainStage;
+    
+    public static boolean adminMode = false;
     public static boolean loggedIn = true;
+    private static StringProperty user = new SimpleStringProperty();
+    private static IntegerProperty access = new SimpleIntegerProperty();
+    
+    public static BooleanProperty showQueue = new SimpleBooleanProperty(true);
+    public static BooleanProperty includeUPSInTotals = new SimpleBooleanProperty(false);
+    public static final double CRADLE_WEIGHT = 600.0;
+    
+    private static Map<String, Object> options = new HashMap<>();
     
     public static boolean isAdminMode() {
         return adminMode;
     }
     
-    private AppManager() {
+    static {
         options.put("delim", "\t");
         options.put("live_search", true);
-        options.put("sp_quantity", 20);   
+        options.put("sp_quantity", 20);  
+    }
+    
+    public static BooleanProperty accessRequiredProperty() {
+    	return accessRequired;
+    }
+    
+    public static boolean isAccessRequired() {
+    	return accessRequired.get();
     }
     
     public static boolean getLiveSearch() {
-        return (boolean) getInstance().options.get("live_search");
+        return (boolean) options.get("live_search");
     }
     
     public static void setLiveSearch(boolean b) {
-        getInstance().options.put("live_search", b);
+        options.put("live_search", b);
     }
     
     public static int getStraightPullQuantity() {
-        return (int) getInstance().options.get("sp_quantity");
+        return (int) options.get("sp_quantity");
     }
     
     public static void setStraightPullQuantity(int intValue) {
-        getInstance().options.put("sp_quantity", intValue);
+        options.put("sp_quantity", intValue);
     }
     
-    public static HashMap<String, Object> getOptions() {
-        return getInstance().options;
+    public static String getDelimiter() {
+    	return (String) options.get("delim");
     }
     
-    private static AppManager getInstance() {
-        if(INSTANCE == null) {
-            INSTANCE = new AppManager();
-        }
-        
-        return INSTANCE;
-    }
-    
-    public static String getPNCFromDate() {
-        return pncFromDate;
-    }
     
     public static void setMainStage(Stage stage) {
         mainStage = stage;
@@ -135,55 +111,53 @@ public class AppManager {
         return mainStage;
     }
 
-    public static void setStatusBarText(String str) {
-        getInstance().statusBar.set(str);
-    }
-
-    public static void updatePNCTotal() {
-        pncTotal.set(QueryFunctions.getPNCTotal());
-    }
     
     public static void refresh() {
-        if(!loggedIn) { return; }
+    	if(!hasBasicAccess()) { return; }
         
-        Platform.runLater(() -> {
-            Queues.refresh();
-            updatePNCTotal();
-            getInstance().setCRDCount();
-            PickQueue.refresh();
-            
-            try {
-				caseCount.set(QueryFunctions.getCasePickTotal());
-				palletCount.set(QueryFunctions.getPalletPickTotal());
-	            upsCount.set(QueryFunctions.getUPSPickTotal());
-	            graingerCount.set(QueryFunctions.getGraingerPickTotal());
-            } catch (IOException e) {
-				e.printStackTrace();
-			}
-            
-            
-            Queues.reset();
-            invHistory.clear();
-            invHistory.addAll(QueryFunctions.getLast10InventoryTransactions());
-            userTotals.clear();
-            userTotals.addAll(QueryFunctions.getUserTotalsForShift());
-            lastRefreshedProperty.set("Last refreshed on " + LocalDate.now() + " at " + LocalTime.now());
-            lastRefreshed.set(ZonedDateTime.now());
-        });
+        
+        QueueManager.refresh();
+        PickQueueTotals.refresh();
+        UserManager.refresh();
+        
+        PNC.refresh();
+        //QueueCounts.refresh();
+        
     }
     
     public static void openCalculator() {
-        getInstance().openCalculator(true);
+    	if(!hasBasicAccess()) { return; }
+    	
+        openCalculator(true);
+    }
+    
+    public static boolean hasBasicAccess() {
+    	if(isAccessRequired() && access.get() > 0) {
+        	return true;
+        }
+    	
+    	return false;
+    }
+    
+    public static boolean hasAdminAccess() {
+    	if(access.get() == 2) {
+        	return true;
+        }
+    	
+    	return false;
     }
     
     public static void openCRDChecker() {
-        getInstance().openCRDChecker(true);
+    	if(!hasAdminAccess()) { return; }
+        openCRDChecker(true);
     }
     
-    private void openCalculator(boolean b) {
+    private static void openCalculator(boolean b) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Calculator.fxml"));
+            FXMLLoader loader = new FXMLLoader(AppManager.class.getClass().getResource("/fxml/Calculator.fxml"));
             Parent root = loader.load();
+            
+            
             
             Stage stage = new Stage();
             stage.setTitle("Cable Calculator");
@@ -196,9 +170,9 @@ public class AppManager {
         }
     }
     
-    private void openCRDChecker(boolean b) {
+    private static void openCRDChecker(boolean b) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/CRD.fxml"));
+            FXMLLoader loader = new FXMLLoader(AppManager.class.getClass().getResource("/fxml/CRD.fxml"));
             Parent root = loader.load();
             
             Stage stage = new Stage();
@@ -237,24 +211,24 @@ public class AppManager {
     	
     	str += "Cut: \n";
     	str += "===============\n";
-    	str += "Cuts: " + Queues.getFilteredCuts().size() + "\n";
-    	str += "SPs: " + Queues.spCount.get() + "\n";
-    	str += "Total: " + Queues.spCount.get() + "\n";
+    	str += "Cuts: " + QueueManager.getFilteredCuts().size() + "\n";
+    	str += "SPs: " + QueueManager.spCount.get() + "\n";
+    	str += "Total: " + QueueManager.spCount.get() + "\n";
     	
     	str += "\nBreakdown: \n";
     	str += "===============\n";
-    	str += "Reels: " + Queues.reelCountProperty.get() + "\n";
-    	str += "BW: " + Queues.bwCountProperty.get() + "\n";
-    	str += "Cord: " + Queues.cordCountProperty.get() + "\n";
-    	str += "Fiber: " + Queues.fiberCountProperty.get() + "\n";
-    	str += "PV: " + Queues.pvCountProperty.get() + "\n";
+    	str += "Reels: " + QueueManager.reelCountProperty.get() + "\n";
+    	str += "BW: " + QueueManager.bwCountProperty.get() + "\n";
+    	str += "Cord: " + QueueManager.cordCountProperty.get() + "\n";
+    	str += "Fiber: " + QueueManager.fiberCountProperty.get() + "\n";
+    	str += "PV: " + QueueManager.pvCountProperty.get() + "\n";
     	
     	str += "\nPick: \n";
     	str += "===============\n";
-    	str += "Case: " + caseCount.get() + "\n";
-    	str += "Pallet: " + palletCount.get() + "\n";
-    	str += "UPS: " + AppManager.upsCount.get() + "\n";
-    	str += "Grainger: " + AppManager.graingerCount.get() + "\n";
+    	str += "Case: " + PickQueueTotals.cases.get() + "\n";
+    	str += "Pallet: " + PickQueueTotals.pallets.get() + "\n";
+    	str += "UPS: " + PickQueueTotals.ups.get() + "\n";
+    	str += "Grainger: " + PickQueueTotals.grainger.get() + "\n";
     	
     	
     	StringSelection selection = new StringSelection(str);
@@ -268,8 +242,11 @@ public class AppManager {
     	Image image = null;
     	
     	try {
-        	image = new Image(MainApp.class.getResourceAsStream(strIconFile));
-        	
+        	if(MainApp.IS_SNAPSHOT) {
+        		image = new Image(MainApp.class.getResourceAsStream(ICON_FILE_SNAPSHOT));	
+        	} else {
+        		image = new Image(MainApp.class.getResourceAsStream(ICON_FILE));
+        	}
         } catch (Throwable t) {
         	t.printStackTrace();
         }
@@ -278,38 +255,9 @@ public class AppManager {
     }
     
     
-    String exclusions = "";
-    private void setCRDCount() {
-        exclusions = "";
-        int count = 0;
-        try {
-            Files.lines(Paths.get("C:\\Macros\\seq.txt")).forEach(line -> {            
-                exclusions += "," + line;
-            });
-        } catch (IOException ex) {
-            Logger.getLogger(CRDController.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-        exclusions = exclusions.replaceFirst(",", "");
-        try {
-            String sqlStmt = (QueryFunctions.readSQLFile("/sql/CRD.sql").replace("<THHSEQ>", exclusions));
-            try (ResultSet rs = QueryFunctions.query(sqlStmt)) {
-                while(rs.next()) {
-                    count++;
-                }
-                System.out.println(count);
-            } catch (SQLException ex) {
-                Logger.getLogger(CRDController.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        } catch (IOException ex) {
-            Logger.getLogger(CRDController.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        crdCount.set(count);
-    }
-    
     static public void loadTemplate(Pane parent, String fxmlFile) {
         try {
-            FXMLLoader loader = new FXMLLoader(getInstance().getClass().getResource(fxmlFile));
+            FXMLLoader loader = new FXMLLoader(AppManager.class.getClass().getResource(fxmlFile));
             Parent root = null;
             root = loader.load();    
             Scene scene = new Scene(root);
@@ -319,9 +267,6 @@ public class AppManager {
         } 
     }
     
-    static public ObservableList<HistoryItem> getInventoryHistory() {
-        return invHistory;
-    }
     
     public static ObservableList<UserTotal> getUserTotals() {
         return userTotals;
@@ -337,5 +282,18 @@ public class AppManager {
         if(success){
             job.endJob();
         }
+    }
+    
+    public static StringProperty searchBoxProperty() {
+    	return searchBoxTextProperty;
+    }
+    
+    
+    public static StringProperty userProperty() {
+    	return user;
+    }
+    
+    public static IntegerProperty accessProperty() {
+    	return access;
     }
 }

@@ -7,13 +7,13 @@
 package org.dwm.dashboard;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+
 
 /**
  *
@@ -44,7 +44,7 @@ public class Reports {
     
         ArrayList<ArrayList<String>> rows = new ArrayList<>();
         
-        Queues.getFilteredCuts().forEach(item -> {
+        QueueManager.getFilteredCuts().forEach(item -> {
             ArrayList<String> row = new ArrayList<>();
         
             row.add(Integer.toString(item.priority.get()));
@@ -83,7 +83,8 @@ public class Reports {
     
     public static void exportReplenQueue() {
         String[] columnNames = {
-            "Priority",
+        	"Cut Priority",
+        	"Priority",
             "Order",
             "License Plate",
             "Part Number",
@@ -151,67 +152,67 @@ public class Reports {
     	
     	ArrayList<String> row = new ArrayList<>();
     	row.add("Cuts");
-    	row.add(Integer.toString(Queues.getFilteredCuts().size()));
+    	row.add(Integer.toString(QueueManager.getFilteredCuts().size()));
     	rows.add(row);
     	
     	row = new ArrayList<>();
     	row.add("SP");
-    	row.add(Integer.toString(Queues.spCount.get()));
+    	row.add(Integer.toString(QueueManager.spCount.get()));
     	rows.add(row);
     	
     	row = new ArrayList<>();
     	row.add("Reels");
-    	row.add(Integer.toString(Queues.reelCountProperty.get()));
+    	row.add(Integer.toString(QueueManager.reelCountProperty.get()));
     	rows.add(row);
     	
     	row = new ArrayList<>();
     	row.add("BW");
-    	row.add(Integer.toString(Queues.bwCountProperty.get()));
+    	row.add(Integer.toString(QueueManager.bwCountProperty.get()));
     	rows.add(row);
     	
     	row = new ArrayList<>();
     	row.add("Cord");
-    	row.add(Integer.toString(Queues.cordCountProperty.get()));
+    	row.add(Integer.toString(QueueManager.cordCountProperty.get()));
     	rows.add(row);
     	
     	row = new ArrayList<>();
     	row.add("Fiber");
-    	row.add(Integer.toString(Queues.fiberCountProperty.get()));
+    	row.add(Integer.toString(QueueManager.fiberCountProperty.get()));
     	rows.add(row);
     	
     	row = new ArrayList<>();
     	row.add("PV");
-    	row.add(Integer.toString(Queues.pvCountProperty.get()));
+    	row.add(Integer.toString(QueueManager.pvCountProperty.get()));
     	rows.add(row);
     	
     	row = new ArrayList<>();
     	row.add("Shuttles");
-    	row.add(Integer.toString(Queues.getFilteredShuttles().size()));
+    	row.add(Integer.toString(QueueManager.getFilteredShuttles().size()));
     	rows.add(row);
     	
     	row = new ArrayList<>();
     	row.add("Replens");
-    	row.add(Integer.toString(Queues.getFilteredReplens().size()));
+    	row.add(Integer.toString(QueueManager.getFilteredReplens().size()));
     	rows.add(row);
     	
     	row = new ArrayList<>();
     	row.add("Cases");
-    	row.add(Integer.toString(AppManager.caseCount.get()));
+    	row.add(Integer.toString(PickQueueTotals.caseProperty().get()));
     	rows.add(row);
     	
     	row = new ArrayList<>();
     	row.add("Pallets");
-    	row.add(Integer.toString(AppManager.palletCount.get()));
+    	row.add(Integer.toString(PickQueueTotals.palletProperty().get()));
     	rows.add(row);
     	
     	row = new ArrayList<>();
     	row.add("UPS");
-    	row.add(Integer.toString(AppManager.upsCount.get()));
+    	row.add(Integer.toString(PickQueueTotals.upsProperty().get()));
     	rows.add(row);
     	
     	row = new ArrayList<>();
     	row.add("Grainger");
-    	row.add(Integer.toString(AppManager.graingerCount.get()));
+    	row.add(Integer.toString(PickQueueTotals.graingerProperty().get()));
     	rows.add(row);
     	
         
@@ -227,5 +228,24 @@ public class Reports {
         if(rows.size() != 0) {
         	ExcelWriter.WriteTable(tempFile, rows, columnNames, true);
         }
+    }
+    
+    public static void totalsLogExport() {
+    	String output = "";
+    	
+    	output += LocalDateTime.now() + "\t";
+    	output += AppManager.userProperty().get() + "\t";
+    	output += Integer.toString(QueueManager.getFilteredCuts().size()) + "\t";
+    	output += Integer.toString(QueueManager.getFilteredReplens().size()) + "\t";
+    	output += Integer.toString(QueueManager.allShuttles.size()) + "\t";
+    	output += QueueManager.countBinding(QueueManager.SHUTTLE, item -> { return item.isCradle(); }).get();
+    	
+    	try {
+    		new File("G:\\Clerical\\Cut Lead\\Tools\\Dashboard\\config\\test.txt").getParentFile().mkdirs();
+    		Files.write(Paths.get("G:\\Clerical\\Cut Lead\\Tools\\Dashboard\\config\\test.txt"), output.getBytes(), StandardOpenOption.APPEND);
+    		
+		} catch (IOException e) {			
+			e.printStackTrace();
+		}
     }
 }
