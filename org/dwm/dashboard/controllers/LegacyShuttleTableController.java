@@ -11,9 +11,11 @@ import java.util.function.Predicate;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
-import org.dwm.dashboard.QueueItem;
-import org.dwm.dashboard.Queues;
+
+import org.dwm.dashboard.QueueManager;
+import org.dwm.dashboard.bean.QueueItem;
 
 /**
  * FXML Controller class
@@ -22,18 +24,20 @@ import org.dwm.dashboard.Queues;
  */
 public class LegacyShuttleTableController extends TableController implements Initializable {
 	@FXML private TableColumn<QueueItem, String> colWLU;
+	@FXML private MenuItem mitmExclude;
+    @FXML private MenuItem mitmInclude;
     
     /**
      * Initializes the controller class.
      * @param url
      * @param rb
      */
-    @SuppressWarnings({ "unchecked", "rawtypes" })
+    @SuppressWarnings({ "rawtypes" })
 	@Override
     public void initialize(URL url, ResourceBundle rb) {
         super.initialize(url, rb);
-        Queues.getFilteredShuttles().comparatorProperty().bind(tblQueue.comparatorProperty());
-        tblQueue.setItems(Queues.getFilteredShuttles());
+        QueueManager.getFilteredShuttles().comparatorProperty().bind(tblQueue.comparatorProperty());
+        tblQueue.setItems(QueueManager.getFilteredShuttles());
         
         
         colPriority.setCellValueFactory(cellData -> cellData.getValue().priority.asObject());
@@ -51,13 +55,30 @@ public class LegacyShuttleTableController extends TableController implements Ini
         
         
         tblQueue.getColumns().forEach(column -> ((TableColumn) column).prefWidthProperty().bind(tblQueue.widthProperty().divide(12)));
+        mitmExclude.setOnAction(e -> {
+            excludeSelected();
+        });
+        
+        mitmInclude.setOnAction(e -> {
+            includeAll();
+        });
     }    
+    
+    @FXML 
+    private void excludeSelected() {
+        QueueManager.exclude(QueueManager.SHUTTLE, getPredicate());
+    }
+    
+    @FXML
+    private void includeAll() {
+        QueueManager.clearPersistantFilter(QueueManager.SHUTTLE);
+    }
     
     @Override
     void applyCellFilter() {
         Predicate<QueueItem> pred = getPredicate();
         if(pred != null) {
-            Queues.applyFilter(Queues.SHUTTLE, pred);
+            QueueManager.applyFilter(QueueManager.SHUTTLE, pred);
         }
     }
 

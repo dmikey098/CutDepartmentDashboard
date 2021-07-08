@@ -1,7 +1,6 @@
 package org.dwm.dashboard.controllers;
 
 import java.awt.print.PrinterException;
-import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
@@ -11,6 +10,7 @@ import javafx.beans.binding.DoubleBinding;
 import javafx.beans.property.IntegerProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TabPane;
@@ -26,17 +26,19 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.Tab;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javax.swing.JFrame;
 import javax.swing.JTable;
 import javax.swing.table.AbstractTableModel;
 import org.dwm.dashboard.AppManager;
-import org.dwm.dashboard.ExcelWriter;
+import org.dwm.dashboard.PNC;
+import org.dwm.dashboard.PickQueueTotals;
 import org.dwm.dashboard.QueryFunctions;
-import org.dwm.dashboard.QueueItem;
-import org.dwm.dashboard.Queues;
+import org.dwm.dashboard.QueueManager;
 import org.dwm.dashboard.Reports;
+import org.dwm.dashboard.bean.QueueItem;
 
 /**
  * FXML Controller class
@@ -46,17 +48,23 @@ import org.dwm.dashboard.Reports;
 public class LegacyDashboardController implements Initializable { 
     @FXML private BorderPane app;
     @FXML private TabPane tabPane;
+    @FXML private AnchorPane donutChart;
     @FXML private Label lblCutCount;
     @FXML private Label lblSPCount;
     @FXML private Label lblCutTotal;
     @FXML private Label lblReelCount;
     @FXML private Label lblCutsOver2500;
     @FXML private Label lblCutsOver5000;
+    @FXML private Label lblTruckload;
+    @FXML private Label lblLTLCuts;
+    @FXML private Label lblUPSCuts;
     @FXML private Label lblBWCuts;
     @FXML private Label lblCordCuts;
     @FXML private Label lblFiberCuts;
     @FXML private Label lblPVCuts;
     @FXML private Label lblProjCradles;
+    @FXML private Label lbl60Cradles;
+    @FXML private Label lbl60CradlesLabel;
     @FXML private Label lblCradles;
     @FXML private Label lblShuttles;
     @FXML private Label lblReplens;
@@ -82,6 +90,10 @@ public class LegacyDashboardController implements Initializable {
     ObservableList<Label> column2 = FXCollections.observableArrayList();
     ObservableList<Label> column3 = FXCollections.observableArrayList();
     ObservableList<Label> column4 = FXCollections.observableArrayList();
+    @FXML private Tab cutTab;
+    @FXML private Node cutTable;
+    @FXML private Node countTable;
+    @FXML private UtilityTab utilityTab;
     
     /**
      * Initializes the controller class.
@@ -112,30 +124,60 @@ public class LegacyDashboardController implements Initializable {
         });
         
         
+        //Focus on txtAsle field on Utility Tab when tab is selected
+        tabPane.getSelectionModel().selectedIndexProperty().addListener((obs, oldValue, newValue) -> {
+        	if((int)newValue == 4) {
+        		Platform.runLater(() -> {
+        			utilityTab.requestFocus();
+            		utilityTab.txtAsle.requestFocus();
+        		});	
+        	}
+        	
+        });
         
         //=============== Labels ===============
         //Column 1
-        lblCutCount.textProperty().bind(Queues.cutCount.asString());
-        lblSPCount.textProperty().bind(Queues.spCount.asString());
-        lblCutTotal.textProperty().bind(Queues.totalProperty.asString());
-        lblReelCount.textProperty().bind(Queues.reelCountProperty.asString());
-        lblCutsOver2500.textProperty().bind(Queues.cutsOver2500.asString());
-        lblCutsOver5000.textProperty().bind(Queues.cutsOver5000.asString());
-        
+        lblCutCount.textProperty().bind(QueueManager.cutCount.asString());
+        lblSPCount.textProperty().bind(QueueManager.spCount.asString());
+        lblCutTotal.textProperty().bind(QueueManager.totalProperty.asString());
+        lblReelCount.textProperty().bind(QueueManager.reelCountProperty.asString());
+        lblTruckload.textProperty().bind(QueueManager.countBinding(QueueManager.CUT, row -> { return row.isTruckload(); }).asString());
+        lblLTLCuts.textProperty().bind(QueueManager.countBinding(QueueManager.CUT, row -> { return !row.isTruckload() && !row.isUPS(); }).asString());
+        lblUPSCuts.textProperty().bind(QueueManager.countBinding(QueueManager.CUT, row -> { return row.isUPS(); }).asString());
         
         //Column 2
-        lblBWCuts.textProperty().bind(Queues.bwCountProperty.asString());
-        lblCordCuts.textProperty().bind(Queues.cordCountProperty.asString());
-        lblFiberCuts.textProperty().bind(Queues.fiberCountProperty.asString());
-        lblPVCuts.textProperty().bind(Queues.pvCountProperty.asString());
-        
+        lblBWCuts.textProperty().bind(QueueManager.bwCountProperty.asString());
+        lblCordCuts.textProperty().bind(QueueManager.cordCountProperty.asString());
+        lblFiberCuts.textProperty().bind(QueueManager.fiberCountProperty.asString());
+        lblPVCuts.textProperty().bind(QueueManager.pvCountProperty.asString());
+        lblCutsOver2500.textProperty().bind(QueueManager.cutsOver2500.asString());
+        lblCutsOver5000.textProperty().bind(QueueManager.cutsOver5000.asString());
         
         //Column 3
-        lblPNCTotal.textProperty().bind(AppManager.pncTotal.asString());
-        lblShuttles.textProperty().bind(Queues.countBinding(Queues.SHUTTLE, row -> { return true; }).asString());
-        lblReplens.textProperty().bind(Queues.countBinding(Queues.REPLEN, row -> { return true; }).asString());
-        lblCradles.textProperty().bind(Queues.countBinding(Queues.SHUTTLE, row -> { return row.isCradle(); }).asString());
-        lblProjCradles.textProperty().bind(Queues.countBinding(Queues.CUT, row -> { return row.isCradle(); }).asString());
+        lblPNCTotal.textProperty().bind(PNC.totalProperty());
+        lblShuttles.textProperty().bind(QueueManager.countBinding(QueueManager.SHUTTLE, row -> { return true; }).asString());
+        lblReplens.textProperty().bind(QueueManager.countBinding(QueueManager.REPLEN, row -> { return true; }).asString());
+        lblCradles.textProperty().bind(QueueManager.countBinding(QueueManager.SHUTTLE, row -> { return row.isCradle(); }).asString());
+        lblProjCradles.textProperty().bind(QueueManager.countBinding(QueueManager.CUT, row -> { return row.isCradle(); }).asString());
+        lbl60Cradles.textProperty().bind(QueueManager.countBinding(QueueManager.CUT, row -> { 
+        	boolean b = false;
+        	
+        	if(row.reel.get().equals("60") && row.getType().equals("BW")) {
+        		b = true;
+        	} else if(row.reel.get().equals("72")) {
+        		b = true;
+        	}
+        	
+        	return b; 
+        }).asString());
+        //lblTruckloadCuts.textProperty().bind(Queues.countBinding(Queues.CUT, row -> { return row.isTruckload(); }).asString());
+        
+        lbl60Cradles.textProperty().addListener((obs, oldValue, newValue) -> {
+            boolean b = !newValue.equals("0");
+            lbl60Cradles.setVisible(b);
+            lbl60CradlesLabel.setVisible(b);
+        });
+        
         
         
         
@@ -143,6 +185,33 @@ public class LegacyDashboardController implements Initializable {
         lblStatusBar.textProperty().bind(AppManager.lastRefreshedProperty);
         
         
+        
+        //Hide donut chart when window below 975px
+        AppManager.getMainStage().widthProperty().addListener((obs, oldValue, newValue) -> {
+        	if(newValue.intValue() < 975)
+        		donutChart.setVisible(false);
+        	else
+        		donutChart.setVisible(true);
+        });
+        
+        
+        
+        //Filter on enter in from priority text field
+        txtFromPriority.setOnKeyPressed(e -> {
+        	if(e.getCode() == KeyCode.ENTER) {
+        		filterByPriorityRange();
+        	}
+        	
+        });
+        
+        AppManager.showQueue.addListener((obs, oldValue, newValue) -> {
+        	if(newValue) {
+        		cutTab.setContent(cutTable);
+        	} else {
+        		cutTab.setContent(countTable);
+        	}
+        });
+                
         /*
         lblWrongDateValue.textProperty().bind(Queues.countBinding(Queues.CUT, row -> {
             String shipDate = row.shipOnDate.get();
@@ -158,11 +227,7 @@ public class LegacyDashboardController implements Initializable {
             return dtComp != -1 && dtComp != 0 && row.priority.get() < 100;
         }).asString());
         
-        lblPNCTotal.textProperty().addListener((obs, oldValue, newValue) -> {
-            lblPNCTotal.setTextFill(Color.BLACK);
-            if(!newValue.equals("0")) 
-                lblPNCTotal.setTextFill(Color.RED);
-        });
+        
         
         lblWrongDateValue.textProperty().addListener((obs, oldValue, newValue) -> {
             boolean b = !newValue.equals("0");
@@ -180,34 +245,23 @@ public class LegacyDashboardController implements Initializable {
         });
         */
         
-        lblCase.textProperty().bind(AppManager.caseCount.asString());
-        lblPallet.textProperty().bind(AppManager.palletCount.asString());
-        lblUPS.textProperty().bind(AppManager.upsCount.asString());
-        lblGrainger.textProperty().bind(AppManager.graingerCount.asString());
+        lblCase.textProperty().bind(PickQueueTotals.caseProperty().asString());
+        lblPallet.textProperty().bind(PickQueueTotals.palletProperty().asString());
+        lblUPS.textProperty().bind(PickQueueTotals.upsProperty().asString());
+        lblGrainger.textProperty().bind(PickQueueTotals.graingerProperty().asString());
         
         if(AppManager.isAdminMode()) {
             mitmCrdChecker.setVisible(true);
         }
         
+        lblPNCTotal.textProperty().addListener((obs, oldValue, newValue) -> {
+            lblPNCTotal.setTextFill(Color.BLACK);
+            if(!newValue.equals("0")) 
+                lblPNCTotal.setTextFill(Color.RED);
+        });
     }    
     
-    @FXML
-    private void exportToExcel() {
-        switch (tabPane.getSelectionModel().getSelectedIndex()) {
-            case 0:
-                //AppManager.exportToExcel(Queues.getFilteredCuts());
-                break;
-            case 1:
-                //AppManager.exportToExcel(ShuttleQueue.getFilteredItems());
-                break;
-            case 2:
-                //AppManager.exportToExcel(ReplenQueue.getFilteredItems());
-                break;
-            default:
-                break;
-        }
-    }
-    
+        
     @FXML
     private void exportCuts() {
     	Reports.exportCutQueue();
@@ -237,7 +291,7 @@ public class LegacyDashboardController implements Initializable {
 			 */
 			private static final long serialVersionUID = -2980818670632657356L;
 			private String[] colNames = {"", "", ""};
-            SortedList<QueueItem> data = Queues.getFilteredCuts();
+            SortedList<QueueItem> data = QueueManager.getFilteredCuts();
             
             
             @Override
@@ -296,8 +350,8 @@ public class LegacyDashboardController implements Initializable {
         	
             int minPty = Integer.parseInt(txtFromPriority.getText());
             int maxPty = txtToPriority.getText().isEmpty() ? Integer.parseInt(txtFromPriority.getText()) : Integer.parseInt(txtToPriority.getText());
-            Queues.clearFilter(Queues.ALL);
-            Queues.filterByPriorityRange(minPty, maxPty);
+            QueueManager.clearFilter(QueueManager.ALL);
+            QueueManager.filterByPriorityRange(minPty, maxPty);
         } catch (NumberFormatException ignore) {}
     }
     
@@ -314,9 +368,10 @@ public class LegacyDashboardController implements Initializable {
     
     @FXML
     private void clearFilter() {
+    	AppManager.searchBoxProperty().set("");
         txtFromPriority.setText("");
         txtToPriority.setText("");
-        Queues.reset();
+        QueueManager.reset();
     }
     
     @FXML
@@ -351,66 +406,81 @@ public class LegacyDashboardController implements Initializable {
         }
     }
     
+    
     @FXML
-    private void setPickTotals() throws IOException {
-        lblCase.setText(Integer.toString(QueryFunctions.getCasePickTotal()));
-        lblPallet.setText(Integer.toString(QueryFunctions.getPalletPickTotal()));
-        lblUPS.setText(Integer.toString(QueryFunctions.getUPSPickTotal()));
-        lblGrainger.setText(Integer.toString(QueryFunctions.getGraingerPickTotal()));
+    private void filterLTLCuts() {
+    	QueueManager.applyFilter(QueueManager.CUT, item -> {
+    		return (!item.isTruckload() && !item.isUPS());
+    	});
+    }
+    
+    @FXML
+    private void filterUPSCuts() {
+    	QueueManager.applyFilter(QueueManager.CUT, item -> item.isUPS());
+    }
+    
+    @FXML
+    private void filterTruckloadCuts() {
+    	QueueManager.applyFilter(QueueManager.CUT, item -> item.isTruckload());
     }
     
     @FXML
     private void filterCradles() {
-        Queues.applyFilter(Queues.SHUTTLE, item -> item.isCradle());
+        QueueManager.applyFilter(QueueManager.SHUTTLE, item -> item.isCradle());
+    }
+    
+    @FXML
+    private void filterProjCradles() {
+    	QueueManager.applyFilter(QueueManager.CUT, item -> item.isCradle());
     }
         
     @FXML
     private void filterSPs() {
-        Queues.applyFilter(Queues.CUT, item -> (item.onHandQuantity.get() - item.orderQuantity.get() <= AppManager.getStraightPullQuantity()));
+        QueueManager.applyFilter(QueueManager.CUT, item -> (item.onHandQuantity.get() - item.orderQuantity.get() <= AppManager.getStraightPullQuantity()));
     }
     
     @FXML
     private void filterBW() {
         filterCuts();
-        Queues.applyFilter(Queues.CUT, item -> (item.type.get().equals("BW")));
+        QueueManager.applyFilter(QueueManager.CUT, item -> (item.type.get().equals("BW")));
     }
     
     @FXML
     private void filterFiber() {
         filterCuts();
-        Queues.applyFilter(Queues.CUT, item -> (item.type.get().equals("FIBER")));
+        QueueManager.applyFilter(QueueManager.CUT, item -> (item.type.get().equals("FIBER")));
     }
     
     @FXML
     private void filterCord() {
         filterCuts();
-        Queues.applyFilter(Queues.CUT, item -> (item.type.get().equals("CORD")));
+        QueueManager.applyFilter(QueueManager.CUT, item -> (item.type.get().equals("CORD")));
     }
     
     @FXML
     private void filterPV() {
         filterCuts();
-        Queues.applyFilter(Queues.CUT, item -> (item.type.get().equals("PV")));
+        QueueManager.applyFilter(QueueManager.CUT, item -> (item.type.get().equals("PV")));
     }
     
     @FXML
     private void filterCuts() {
-        Queues.applyFilter(Queues.CUT, item -> (item.onHandQuantity.get() - item.orderQuantity.get() > AppManager.getStraightPullQuantity()));
+        QueueManager.applyFilter(QueueManager.CUT, item -> (item.onHandQuantity.get() - item.orderQuantity.get() > AppManager.getStraightPullQuantity()));
     }
 
     @FXML 
     private void filterMultiCuts() {
-        Queues.applyFilter(Queues.CUT, item -> (Queues.getDuplicatePlates().contains(item.licensePlate.get())));
+        QueueManager.applyFilter(QueueManager.CUT, item -> (QueueManager.getDuplicatePlates().contains(item.licensePlate.get())));
     }
     
     @FXML
     private void filterCutsOver2500() {
-        Queues.applyFilter(Queues.CUT, item -> item.orderQuantity.get() >= 2500 && item.orderQuantity.get() < 5000);
+        QueueManager.applyFilter(QueueManager.CUT, item -> item.orderQuantity.get() >= 2500 && item.orderQuantity.get() < 5000);
     }
     
     @FXML
     private void filterCutsOver5000() {
-        Queues.applyFilter(Queues.CUT, item -> item.orderQuantity.get() >= 5000);
+        QueueManager.applyFilter(QueueManager.CUT, item -> item.orderQuantity.get() >= 5000);
     }
     
     @FXML
@@ -433,10 +503,7 @@ public class LegacyDashboardController implements Initializable {
     private void close() {
         Platform.exit();
     }
-    
-   
-    
-    
+      
 
     @SuppressWarnings("unused")
 	private Predicate<QueueItem> getContainsPredicate(String strValue) {
@@ -482,22 +549,17 @@ public class LegacyDashboardController implements Initializable {
     
     public DoubleBinding getBinding(IntegerProperty intProp) {
         return Bindings.createDoubleBinding(() -> {
-            if(Queues.cutCount.get() != 0) {
-                return intProp.doubleValue() / (Queues.cutCount.doubleValue() + Queues.spCount.doubleValue()) * 360.00;
+            if(QueueManager.cutCount.get() != 0) {
+                return intProp.doubleValue() / (QueueManager.cutCount.doubleValue() + QueueManager.spCount.doubleValue()) * 360.00;
             }            
             return 0.0;
-        }, Queues.cutCount);
+        }, QueueManager.cutCount);
     }    
     
     public void setTab() {
         tabPane.getSelectionModel().select(0);
     }
     
-    public void setPNCTotal() {
-        lblPNCTotal.setTextFill(Color.BLACK);
-        if(!lblPNCTotal.getText().equals("0")) 
-            lblPNCTotal.setTextFill(Color.RED);
-    }
 }
 
 /*

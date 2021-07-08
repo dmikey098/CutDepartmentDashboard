@@ -11,8 +11,8 @@ import java.util.function.Predicate;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TableColumn;
-import org.dwm.dashboard.PickQueue;
-import org.dwm.dashboard.QueueItem;
+import org.dwm.dashboard.PickQueueTotals;
+import org.dwm.dashboard.bean.QueueItem;
 
 /**
  * FXML Controller class
@@ -25,15 +25,14 @@ public class PalletTableController extends TableController implements Initializa
     @FXML public TableColumn<QueueItem, String> colLevel;
     
     
-    @SuppressWarnings("unchecked")
-	@Override
+    @Override
     public void initialize(URL url, ResourceBundle rb) {
         super.initialize(url, rb);
         
         //Queues.getFilteredCuts().comparatorProperty().bind(tblQueue.comparatorProperty());
         
         
-        tblQueue.setItems(PickQueue.getFilteredPalletPicks());
+        tblQueue.setItems(PickQueueTotals.getFilteredPalletPicks());
         
         
         colPriority.setCellValueFactory(cellData -> cellData.getValue().priority.asObject());

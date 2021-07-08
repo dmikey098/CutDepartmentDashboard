@@ -10,9 +10,11 @@ import java.util.ResourceBundle;
 import java.util.function.Predicate;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
-import org.dwm.dashboard.QueueItem;
-import org.dwm.dashboard.Queues;
+
+import org.dwm.dashboard.QueueManager;
+import org.dwm.dashboard.bean.QueueItem;
 
 /**
  *
@@ -22,12 +24,14 @@ public class LegacyReplenTableController extends TableController implements Init
     @FXML public TableColumn<QueueItem, String> colAsle;
     @FXML public TableColumn<QueueItem, String> colBay;
     @FXML public TableColumn<QueueItem, String> colLevel;
+    @FXML private MenuItem mitmExclude;
+    @FXML private MenuItem mitmInclude;
     
-    @SuppressWarnings({ "unchecked", "rawtypes" })
+    @SuppressWarnings({ "rawtypes" })
 	@Override
     public void initialize(URL url, ResourceBundle rb) {
-        Queues.getFilteredReplens().comparatorProperty().bind(tblQueue.comparatorProperty());
-        tblQueue.setItems(Queues.getFilteredReplens());
+        QueueManager.getFilteredReplens().comparatorProperty().bind(tblQueue.comparatorProperty());
+        tblQueue.setItems(QueueManager.getFilteredReplens());
         super.initialize(url, rb);
         
         colPriority.setCellValueFactory(cellData -> cellData.getValue().priority.asObject());
@@ -48,13 +52,30 @@ public class LegacyReplenTableController extends TableController implements Init
         colBay.setCellValueFactory(cellData -> ((QueueItem) cellData.getValue()).bay);
         colLevel.setCellValueFactory(cellData -> ((QueueItem) cellData.getValue()).level);
         
+        mitmExclude.setOnAction(e -> {
+            excludeSelected();
+        });
+        
+        mitmInclude.setOnAction(e -> {
+            includeAll();
+        });
     }    
+    
+    @FXML 
+    private void excludeSelected() {
+        QueueManager.exclude(QueueManager.REPLEN, getPredicate());
+    }
+    
+    @FXML
+    private void includeAll() {
+        QueueManager.clearPersistantFilter(QueueManager.REPLEN);
+    }
     
     @Override
     void applyCellFilter() {
         Predicate<QueueItem> pred = getPredicate();
         if(pred != null) {
-            Queues.applyFilter(Queues.REPLEN, pred);
+            QueueManager.applyFilter(QueueManager.REPLEN, pred);
         }
     }
 

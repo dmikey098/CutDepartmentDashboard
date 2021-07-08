@@ -14,7 +14,9 @@ public class AboutController implements Initializable {
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		lblVersion.setText(MainApp.version);
+		String str = (MainApp.IS_SNAPSHOT) ? MainApp.IN_DEV_VERSION : MainApp.VERSION;
+		
+		lblVersion.setText(str);
 	}
 
 }

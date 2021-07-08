@@ -15,23 +15,26 @@ import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.ContextMenu;
-import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.SelectionMode;
+
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TablePosition;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import org.dwm.dashboard.AppManager;
 import org.dwm.dashboard.MainApp;
-import org.dwm.dashboard.QueueItem;
-import org.dwm.dashboard.Queues;
+import org.dwm.dashboard.QueueManager;
 import org.dwm.dashboard.Utility;
+import org.dwm.dashboard.bean.QueueItem;
 
 /**
  * FXML Controller class
@@ -42,21 +45,21 @@ import org.dwm.dashboard.Utility;
 
 public class LegacyCutTableController extends TableController implements Initializable { 
     @FXML private TableColumn<QueueItem, String> colReplenStatus;
-    @FXML private ContextMenu pMenu2;
-    @FXML private MenuItem mitmExclude;
-    @FXML private MenuItem mitmInclude;
     @FXML public ScrollPane scrollPane;
     @FXML private TextField txtSearchField;
     
     
     
-    @SuppressWarnings({ "unchecked", "rawtypes" })
+    @SuppressWarnings({ "rawtypes" })
 	@Override
     public void initialize(URL url, ResourceBundle rb) {
         super.initialize(url, rb);
         
-        Queues.getFilteredCuts().comparatorProperty().bind(tblQueue.comparatorProperty());
-        tblQueue.setItems(Queues.getFilteredCuts());
+        tblQueue.getSelectionModel().setCellSelectionEnabled(true);
+        tblQueue.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        
+        QueueManager.getFilteredCuts().comparatorProperty().bind(tblQueue.comparatorProperty());
+        tblQueue.setItems(QueueManager.getFilteredCuts());
         
 
         
@@ -80,7 +83,7 @@ public class LegacyCutTableController extends TableController implements Initial
             cellData -> {
                 String strValue = "";
                 try {
-                    strValue = Queues.lookupReplenByLP(cellData.getValue().licensePlate.get()).status.get();
+                    strValue = QueueManager.lookupReplenByLP(cellData.getValue().licensePlate.get()).status.get();
                 } catch (NullPointerException e) {}
 
                 if(cellData.getValue().status.get().equals("R")) {
@@ -102,56 +105,33 @@ public class LegacyCutTableController extends TableController implements Initial
             });
         });
         
+        AppManager.searchBoxProperty().addListener((obs, oldValue, newValue) -> {
+        	txtSearchField.setText(newValue);
+        });
+        
         txtSearchField.textProperty().addListener((obs, oldValue, newValue) -> {
             if(newValue.equals("")) {
-                Queues.clearFilter(Queues.CUT);
-                Queues.filterByPriorityRange(0, 99);
-                Queues.applyPersistantFilter(Queues.CUT, Queues.completedCuts.negate());
+                QueueManager.clearFilter(QueueManager.CUT);
+                QueueManager.filterByPriorityRange(0, 99);
+                QueueManager.applyPersistantFilter(QueueManager.CUT, QueueManager.completedCuts.negate());
             } else {
-                Queues.clearPersistantFilter(Queues.CUT);
-                search(newValue, false);
+                QueueManager.clearPersistantFilter(QueueManager.CUT);
+                search(newValue);
             }
+            
+            AppManager.searchBoxProperty().set(newValue);
         });
-        
-        mitmExclude.setOnAction(e -> {
-            excludeSelected();
-        });
-        
-        mitmInclude.setOnAction(e -> {
-            includeAll();
-        });
-        
-        
         
         setFlags();
+        
+        
     }
     
-    private void search(String strValue, boolean exactMatch) {
-        Predicate<QueueItem> pred = null;
-        Queues.clearFilter(Queues.ALL);
-        
-        if(exactMatch) {
-            pred = getExactPredicate(strValue);
-        } else if(strValue.contains("-")) {
-            pred = item -> (Integer.toString(item.priority.get()).equals(strValue));
-            try {
-                String[] arr = strValue.split("-");
+    private void search(String strValue) {
+        Predicate<QueueItem> pred = getContainsPredicate(strValue);
+        QueueManager.clearFilter(QueueManager.ALL);
                 
-                if(arr.length == 1) {    
-                    int f = Integer.parseInt(arr[0].trim());
-                    pred = item -> (item.priority.get() == f);
-                } else if(arr.length == 2) {
-                    int f = Integer.parseInt(arr[0].trim());
-                    int e = Integer.parseInt(arr[1].trim());
-                    pred = item -> (item.priority.get() >= f);
-                    pred = pred.and(item -> (item.priority.get() <= e));
-                }
-            } catch(ArrayIndexOutOfBoundsException | NumberFormatException e) {}
-        } else {
-            pred = getContainsPredicate(strValue);
-        }
-        
-        Queues.applyFilter(Queues.CUT, pred);
+        QueueManager.applyFilter(QueueManager.CUT, pred);
     }
     
     private Predicate<QueueItem> getContainsPredicate(String strValue) {
@@ -175,6 +155,7 @@ public class LegacyCutTableController extends TableController implements Initial
         return pred;
     }
     
+    /*
     private Predicate<QueueItem> getExactPredicate(String strValue) {
         Predicate<QueueItem> pred = null;
         
@@ -194,16 +175,71 @@ public class LegacyCutTableController extends TableController implements Initial
         
         return pred;
     }
+    */
+    
+    @FXML
+    private void reelsWith5OrMore() {
+    	QueueManager.applyMultiCutFilter();
+    }
+    
+    @FXML
+    private void top5() {
+    	QueueManager.applyTenOrMoreFilter();
+    }
+    
+    @FXML
+    private void todaysCuts() {
+    	QueueManager.applyTodaysCutsFilter();
+    }
+    
+    @FXML
+    private void showCounts() {
+    	AppManager.showQueue.set(false);
+    }
     
     @FXML 
     private void excludeSelected() {
-        Queues.exclude(getPredicate());
+    	ObservableList<QueueItem> tempList = FXCollections.observableArrayList();
+    	tempList.addAll(tblQueue.getSelectionModel().getSelectedItems());
+    	
+    	if(tblQueue.getSelectionModel().isCellSelectionEnabled()) {
+    		if(tempList.size() > 1) {
+    			@SuppressWarnings("rawtypes")
+				TableColumn col = ((TablePosition) tblQueue.getSelectionModel().getSelectedCells().get(0)).getTableColumn();
+    	        ObservableList<Integer> rows = FXCollections.observableArrayList();
+    	        rows.addAll(tblQueue.getSelectionModel().getSelectedIndices());
+    			
+    			rows.forEach(row -> {
+    				String colName = col.getText();
+    				Object obj = col.getCellData(row.intValue());
+    				try {
+    					QueueManager.exclude(getPredicate(colName, obj));
+    				} catch (NullPointerException ex) {}
+    			});
+    			    			
+        	} else {
+        		QueueManager.exclude(getPredicate());
+        	}
+    	} else {
+    		for(QueueItem qItem : tempList) {
+    			Predicate<QueueItem> pred = (item -> item.equals(qItem));
+    			QueueManager.exclude(pred);
+    		}
+    	}
+    	
+    	
     }
     
     @FXML
     private void includeAll() {
-        Queues.clearPersistantFilter(Queues.ALL);
-        Queues.exclude(Queues.completedCuts);
+        QueueManager.clearPersistantFilter(QueueManager.CUT);
+        QueueManager.exclude(QueueManager.completedCuts);
+    }
+    
+    @FXML
+    private void setPriorities() {
+    	QueueManager.setPersistantPriorities();
+    	
     }
     
     @FXML
@@ -211,18 +247,25 @@ public class LegacyCutTableController extends TableController implements Initial
         AppManager.print(tblQueue);
     }
     
-    @Override
-    void applyCellFilter() {
-        Predicate<QueueItem> pred = getPredicate();
-        System.out.println(pred);
+    @FXML 
+    private void clearAndFilter() {
+    	Predicate<QueueItem> pred = getPredicate();
+        
         if(pred != null) {
-            Queues.applyFilter(Queues.CUT, pred);
+            QueueManager.applyFilter(QueueManager.CUT, pred, true);
         }
     }
     
+    @Override
+    void applyCellFilter() {
+        Predicate<QueueItem> pred = getPredicate();
+        
+        if(pred != null) {
+            QueueManager.applyFilter(QueueManager.CUT, pred);
+        }
+    }
     
-    @SuppressWarnings("unchecked")
-	private void setFlags() {
+    private void setFlags() {
         tblQueue.setRowFactory(tv -> new TableRow<QueueItem>() {
             @Override
             public void updateItem(QueueItem item, boolean empty) {
@@ -230,10 +273,15 @@ public class LegacyCutTableController extends TableController implements Initial
                 resetRowStyle(this);
                 
                 if (item != null && !empty) {    
-                    if (item.onHandQuantity.get() - item.orderQuantity.get() <= AppManager.getStraightPullQuantity()) {
+                    if (item.isStraightPull()) {
                         getStyleClass().add("sp");
-                    } else if(Queues.getDuplicatePlates().contains(item.licensePlate.get())) {
-                    	int index = Queues.getDuplicatePlates().indexOf(item.licensePlate.get());
+                        
+                        if(item.onHandQuantity.get() - item.orderQuantity.get() > 0) {
+                        	getStyleClass().add("flag-quantity");
+                        }
+                        
+                    } else if(QueueManager.getDuplicatePlates().contains(item.licensePlate.get())) {
+                    	int index = QueueManager.getDuplicatePlates().indexOf(item.licensePlate.get());
                     	index -= (index / 100) * 100;
                     	
                     	getStyleClass().add("dup" + Integer.toString(index));
@@ -242,13 +290,22 @@ public class LegacyCutTableController extends TableController implements Initial
                     } 
                     
                     if(item.customer.get().contains("GRANITE")) {
-                        int reelSize = Utility.getReelValue(item);
-                        if(reelSize == 44 || reelSize >= 48) {
+                    	if(item.isCradle()) {
                             getStyleClass().add("flag-reel");
                             getStyleClass().add("flag-customer");
                         }
                     }
+                    
+                    if(item.carrier.get().contains("CLLQ CAN")) {
+                    	if(!item.isStraightPull()) {
+                    		getStyleClass().add("flag-carrier");
+                    	}
+                    }
 
+                    if(item.status.get().equals("K") && item.user.get().isEmpty()) {
+                    	getStyleClass().add("flag-k-status");
+                    }
+                    
                     if(item.reel.get().equals("60") || item.reel.get().equals("72")) {
                         getStyleClass().add("flag-reel");
                     }
@@ -266,6 +323,10 @@ public class LegacyCutTableController extends TableController implements Initial
 
                     if(dtComp != -1 && dtComp != 0 && item.priority.get() < 100) { 
                     	getStyleClass().add("flag-date");
+                    }
+                    
+                    if(item.availStandardLength.get() != 0) {
+                    	//getStyleClass().add("flag-standard");
                     }
                 }
             }

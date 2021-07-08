@@ -18,7 +18,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Arc;
 import org.dwm.dashboard.AppManager;
-import org.dwm.dashboard.Queues;
+import org.dwm.dashboard.QueueManager;
 
 
 /**
@@ -47,21 +47,21 @@ public class LegacyDonutChartController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         
         //lblCount.textProperty().bind(Queues.totalProperty.asString());
-        arcBW.lengthProperty().bind(getBinding(Queues.bwCountProperty));
-        arcCord.lengthProperty().bind(getBinding(Queues.cordCountProperty));
-        arcFiber.lengthProperty().bind(getBinding(Queues.fiberCountProperty));
-        arcPV.lengthProperty().bind(getBinding(Queues.pvCountProperty));
+        arcBW.lengthProperty().bind(getBinding(QueueManager.bwCountProperty));
+        arcCord.lengthProperty().bind(getBinding(QueueManager.cordCountProperty));
+        arcFiber.lengthProperty().bind(getBinding(QueueManager.fiberCountProperty));
+        arcPV.lengthProperty().bind(getBinding(QueueManager.pvCountProperty));
         arcSP.lengthProperty().bind(Bindings.createDoubleBinding(() -> {
-            if(Queues.cutCount.get() != 0) {
-                return Queues.spCount.doubleValue() / (Queues.cutCount.doubleValue() + Queues.spCount.doubleValue()) * 360.00;
+            if(QueueManager.cutCount.get() != 0) {
+                return QueueManager.spCount.doubleValue() / (QueueManager.cutCount.doubleValue() + QueueManager.spCount.doubleValue()) * 360.00;
             }            
             return 360.00;
-        }, Queues.spCount, Queues.cutCount));
+        }, QueueManager.spCount, QueueManager.cutCount));
         
-        bwLabel.textProperty().bind(Queues.bwCountProperty.asString());
-        cordLabel.textProperty().bind(Queues.cordCountProperty.asString());
-        fiberLabel.textProperty().bind(Queues.fiberCountProperty.asString());
-        pvLabel.textProperty().bind(Queues.pvCountProperty.asString());
+        bwLabel.textProperty().bind(QueueManager.bwCountProperty.asString());
+        cordLabel.textProperty().bind(QueueManager.cordCountProperty.asString());
+        fiberLabel.textProperty().bind(QueueManager.fiberCountProperty.asString());
+        pvLabel.textProperty().bind(QueueManager.pvCountProperty.asString());
         //spLabel.textProperty().bind(Queues.spCount.asString());
         
         arcBW.setStartAngle(0.0);
@@ -125,45 +125,45 @@ public class LegacyDonutChartController implements Initializable {
     
     public DoubleBinding getBinding(IntegerProperty intProp) {
         return Bindings.createDoubleBinding(() -> {
-           if(Queues.cutCount.get() != 0) {
-                return intProp.doubleValue() / (Queues.getFilteredCuts().size()) * 360.00;
+           if(QueueManager.cutCount.get() != 0) {
+                return intProp.doubleValue() / (QueueManager.getFilteredCuts().size()) * 360.00;
             }            
             return 0.0;
-        }, Queues.cutCount);
+        }, QueueManager.cutCount);
     }     
 
     @FXML
     private void filterBW(MouseEvent event) {
         filterCuts();
-        Queues.applyFilter(Queues.CUT, item -> (item.type.get().equals("BW")));
+        QueueManager.applyFilter(QueueManager.CUT, item -> (item.type.get().equals("BW")));
     }
     
 
     @FXML
     private void filterCord(MouseEvent event) {
         filterCuts();
-        Queues.applyFilter(Queues.CUT, item -> (item.type.get().equals("CORD")));
+        QueueManager.applyFilter(QueueManager.CUT, item -> (item.type.get().equals("CORD")));
     }
 
     @FXML
     private void filterFiber(MouseEvent event) {
         filterCuts();
-        Queues.applyFilter(Queues.CUT, item -> (item.type.get().equals("FIBER")));
+        QueueManager.applyFilter(QueueManager.CUT, item -> (item.type.get().equals("FIBER")));
     }
 
     @FXML
     private void filterPV(MouseEvent event) {
         filterCuts();
-        Queues.applyFilter(Queues.CUT, item -> (item.type.get().equals("PV")));
+        QueueManager.applyFilter(QueueManager.CUT, item -> (item.type.get().equals("PV")));
     }
 
     @FXML
     private void filterSPs(MouseEvent event) {
-        Queues.applyFilter(Queues.CUT, item -> (item.onHandQuantity.get() - item.orderQuantity.get() <= AppManager.getStraightPullQuantity()));
+        QueueManager.applyFilter(QueueManager.CUT, item -> (item.onHandQuantity.get() - item.orderQuantity.get() <= AppManager.getStraightPullQuantity()));
     }
     
     private void filterCuts() {
-        Queues.applyFilter(Queues.CUT, item -> (item.onHandQuantity.get() - item.orderQuantity.get() > AppManager.getStraightPullQuantity()));
+        QueueManager.applyFilter(QueueManager.CUT, item -> (item.onHandQuantity.get() - item.orderQuantity.get() > AppManager.getStraightPullQuantity()));
     }
     
     public double cos(double angle) {

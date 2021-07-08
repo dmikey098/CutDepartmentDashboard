@@ -10,6 +10,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -41,6 +42,8 @@ public class CalculatorController implements Initializable {
     @FXML private CheckBox chkSpecialty;
     @FXML private CheckBox chkTHHN;
     
+    
+    Map<String, String> pkgMap = new HashMap<>();
     HashMap<String, String> map = new HashMap<>();
     private double[][] capacities;
     private int index;
@@ -52,11 +55,25 @@ public class CalculatorController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        txtPartNumber.setOnKeyPressed((e) -> {
-            if(e.getCode().equals(KeyCode.ENTER)) {
-                String pn = txtPartNumber.getText().toUpperCase();
-                txtDiameter.setText(map.get(pn));
-            }
+        
+        txtPartNumber.textProperty().addListener((obs, oldValue, newValue) -> {
+        	String pn = newValue.toUpperCase();
+            
+        	if(map.containsKey(pn)) {
+        		txtDiameter.setText(map.get(pn));
+        	} else {
+        		txtDiameter.setText("");
+        	}
+        	
+        	if(pkgMap.containsKey(pn)) {
+	        	if(!pkgMap.get(pn).equals("1")) {
+	            	txtQuantity.setText(pkgMap.get(pn));
+	            }
+        	} else {
+        		txtDiameter.setText("");
+        	}
+        	
+        	
         });
         
         btnCalculate.setOnKeyPressed((e) -> {
@@ -87,17 +104,19 @@ public class CalculatorController implements Initializable {
         
         String sqlStmt = ""
             + " SELECT "
-            + "     TRIM(F1), F2"
+            + "     TRIM(F1), F2, CSPKG"
             + " FROM "
-            + "     BBQYXXX.CABLESIZE"
-            + " WHERE "
-            + "     F1 LIKE '%X%'"
-            + "     OR F1 LIKE '%U%'";
+            + "     BBQYXXX.CABLESIZE3"
+            //+ " WHERE "
+            //+ "     F1 LIKE '%X%'"
+            //+ "     OR F1 LIKE '%U%'"
+        	+ "";
                 
         try (ResultSet rs = QueryFunctions.query(sqlStmt)) {
             while(rs.next()) {
                 words.add(rs.getString(1));
                 map.put(rs.getString(1), rs.getString(2));
+                pkgMap.put(rs.getString(1), rs.getString(3));
             }
         } catch (SQLException ex) {}
         
