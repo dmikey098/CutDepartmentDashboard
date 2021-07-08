@@ -4,6 +4,8 @@
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.ContextMenu?>
+<?import javafx.scene.control.MenuItem?>
 
 <ScrollPane fx:id="scrollPane" fitToHeight="true" fitToWidth="true" style="-fx-padding: 0;" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.251" fx:controller="org.dwm.dashboard.controllers.LegacyShuttleTableController">
     <content>
@@ -24,6 +26,14 @@
              <TableColumn fx:id="colLicensePlate" minWidth="125.0" prefWidth="125.0" styleClass="cell" text="LP" visible="false" />
              <TableColumn fx:id="colOnHandQuantity" prefWidth="75.0" styleClass="cell" text="O/H Qty" visible="false" />
          </columns>
+         <contextMenu>
+            <ContextMenu>
+              <items>
+                <MenuItem fx:id="mitmExclude" mnemonicParsing="false" text="Exclude                     " />
+                <MenuItem fx:id="mitmInclude" mnemonicParsing="false" text="Include All                 " />
+              </items>
+            </ContextMenu>
+         </contextMenu>
    
        </TableView>
        </content>

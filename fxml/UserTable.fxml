@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.ScrollPane?>
+
+
+<ScrollPane fx:id="scrollPane" fitToHeight="true" fitToWidth="true" style="-fx-padding: 0;" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.261" fx:controller="org.dwm.dashboard.controllers.UserTableController">
+   <content>
+      <TableView fx:id="tblUsers" layoutX="239.0" layoutY="100.0" prefHeight="200.0" prefWidth="775.0" >
+        <columns>
+          <TableColumn fx:id="colUser" prefWidth="143.0" text="User" />
+          <TableColumn fx:id="colTeam" prefWidth="126.0" text="Team" />
+          <TableColumn fx:id="colJob" prefWidth="126.0" text="Job" />
+          <TableColumn fx:id="colRF" prefWidth="126.0" text="RF" />
+          <TableColumn fx:id="colStartDate" prefWidth="126.0" text="Start Date" />
+          <TableColumn fx:id="colStartTime" prefWidth="126.0" text="Start Time" />
+          <TableColumn fx:id="colTransactions" prefWidth="126.0" text="Transactions" />
+        </columns>
+      </TableView>
+   </content>
+</ScrollPane>

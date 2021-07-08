@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.ContextMenu?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.ToolBar?>
+<?import javafx.scene.control.Button?>
+
+<VBox xmlns="http://javafx.com/javafx/8.0.251" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.dwm.dashboard.controllers.QueueCountTableController">
+    <children>
+        <ToolBar prefHeight="40.0" prefWidth="200.0">
+            <items>
+                <Button mnemonicParsing="false" onAction="#showQueue" text="Show Queue" />
+            </items>
+        </ToolBar>
+		<ScrollPane VBox.vgrow="ALWAYS" fx:id="scrollPane" fitToHeight="true" fitToWidth="true" style="-fx-padding: 0;" >    
+	
+	       <TableView fx:id="tblQueue" editable="true" >
+	         <columns>
+	           <TableColumn fx:id="colPriority" minWidth="40.0" prefWidth="75.0" styleClass="cell" text="Pty" />
+	           <TableColumn fx:id="colOrderNumber" minWidth="60.0" prefWidth="75.0" styleClass="cell" text="Order" />
+	             <TableColumn fx:id="colHasCompletedCuts" minWidth="125.0" prefWidth="125.0" styleClass="cell" text="Has Completed Cuts" />
+	             <TableColumn fx:id="colCount" prefWidth="75.0" text="Cuts on Order" />
+	         </columns>
+	       </TableView>
+		</ScrollPane>
+	</children>
+</VBox>

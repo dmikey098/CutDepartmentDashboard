@@ -7,7 +7,7 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<DialogPane styleClass="widget" prefHeight="275.0" prefWidth="379.0" xmlns="http://javafx.com/javafx/8.0.251" xmlns:fx="http://javafx.com/fxml/1" stylesheets="@Dashboard3_1.css" fx:controller="org.dwm.dashboard.controllers.CalculatorController">
+<DialogPane styleClass="widget" prefHeight="275.0" prefWidth="379.0" xmlns="http://javafx.com/javafx/8.0.261" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.dwm.dashboard.controllers.CalculatorController">
    <content>
       <AnchorPane prefHeight="314.0" prefWidth="379.0">
          <children>

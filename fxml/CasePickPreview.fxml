@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.VBox?>
+
+<!-- <ScrollPane fx:id="scrollPane" fitToHeight="true" fitToWidth="true" style="-fx-padding: 0;" xmlns="http://javafx.com/javafx/8.0.251" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.dwm.app.controller.LegacyCutTableController">    -->
+
+<fx:root type="javafx.scene.layout.VBox" xmlns="http://javafx.com/javafx/8.0.291" xmlns:fx="http://javafx.com/fxml/1" >
+    <children>
+<ScrollPane fx:id="scrollPane" fitToHeight="true" fitToWidth="true" style="-fx-padding: 0;" VBox.vgrow="ALWAYS">    
+    <content>
+       <TableView fx:id="tblQueue" editable="true" prefHeight="0.0" prefWidth="0.0" style="-fx-padding: 0;">
+         <columns>
+			<TableColumn fx:id="colPriority" minWidth="40.0" prefWidth="75.0" styleClass="cell" text="Pty" />
+			<TableColumn fx:id="colControlNumber" minWidth="40.0" prefWidth="75.0" styleClass="cell" text="Ctrl Num" />
+           	<TableColumn fx:id="colOrderNumber" minWidth="60.0" prefWidth="75.0" styleClass="cell" text="Order" />
+            <TableColumn fx:id="colPartNumber" minWidth="110.0" prefWidth="110.0" styleClass="cell" text="Part Number" />
+            <TableColumn fx:id="colOrderQuantity" prefWidth="75.0" styleClass="cell" text="Order Qty" />
+            <TableColumn fx:id="colOnHandQuantity" prefWidth="75.0" styleClass="cell" text="O/H Qty" />
+            <TableColumn fx:id="colCarrier" prefWidth="75.0" styleClass="cell" text="Carrier" />
+            <TableColumn fx:id="colWave" prefWidth="75.0" styleClass="cell" text="Wave" />
+            <TableColumn fx:id="colStatus" prefWidth="75.0" styleClass="cell" text="Status" />
+             
+             
+            <TableColumn fx:id="colAsle" prefWidth="75.0" styleClass="cell" text="ASL" />
+            <TableColumn fx:id="colBay" prefWidth="75.0" styleClass="cell" text="BAY" />
+            <TableColumn fx:id="colLevel" prefWidth="75.0" styleClass="cell" text="LVL" />
+             
+            <TableColumn fx:id="colUser" prefWidth="75.0" styleClass="cell" text="User" />
+            <TableColumn fx:id="colType" prefWidth="75.0" styleClass="cell" text="Type" />
+            <TableColumn fx:id="colCustomer" prefWidth="125.0" text="Customer" />
+            <TableColumn fx:id="colLine" minWidth="40.0" prefWidth="75.0" styleClass="cell" text="Line" />
+            <TableColumn fx:id="colReel" minWidth="40.0" prefWidth="75.0" styleClass="cell" text="Pkg" />
+            <!-- <TableColumn fx:id="colCableOD" prefWidth="75.0" styleClass="cell" text="Cable OD" /> -->
+            <!-- <TableColumn fx:id="colShipOnDate" prefWidth="75.0" styleClass="cell" text="Ship Date" /> -->
+         </columns>
+       </TableView>
+    </content>
+    
+ </ScrollPane>
+ </children>  
+</fx:root>

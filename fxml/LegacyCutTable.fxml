@@ -9,6 +9,7 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.control.ToolBar?>
+<?import javafx.scene.control.Button?>
 
 <!-- <ScrollPane fx:id="scrollPane" fitToHeight="true" fitToWidth="true" style="-fx-padding: 0;" xmlns="http://javafx.com/javafx/8.0.251" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.dwm.app.controller.LegacyCutTableController">    -->
 <VBox xmlns="http://javafx.com/javafx/8.0.251" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.dwm.dashboard.controllers.LegacyCutTableController">
@@ -16,6 +17,10 @@
         <ToolBar prefHeight="40.0" prefWidth="200.0">
             <items>
                 <TextField fx:id="txtSearchField" />
+                <!-- <Button mnemonicParsing="false" onAction="#showCounts" text="Show Counts" /> -->
+                <Button mnemonicParsing="false" onAction="#top5" text="Orders with 5+ Cuts" />
+                <Button mnemonicParsing="false" onAction="#reelsWith5OrMore" text="Reels with 5+ Cuts" />
+                <Button mnemonicParsing="false" onAction="#todaysCuts" text="Today's Cuts" />
             </items>
         </ToolBar>
 <ScrollPane VBox.vgrow="ALWAYS" fx:id="scrollPane" fitToHeight="true" fitToWidth="true" style="-fx-padding: 0;" >    
@@ -26,11 +31,21 @@
            <TableColumn fx:id="colOrderNumber" minWidth="60.0" prefWidth="75.0" styleClass="cell" text="Order" />
              <TableColumn fx:id="colLicensePlate" minWidth="125.0" prefWidth="125.0" styleClass="cell" text="LP" />
              <TableColumn fx:id="colPartNumber" minWidth="110.0" prefWidth="110.0" styleClass="cell" text="Part Number" />
-             <TableColumn fx:id="colOrderQuantity" prefWidth="75.0" styleClass="cell" text="Order Qty" />
-             <TableColumn fx:id="colOnHandQuantity" prefWidth="75.0" styleClass="cell" text="O/H Qty" />
-             <TableColumn fx:id="colCarrier" prefWidth="75.0" styleClass="cell" text="Carrier" />
+             <TableColumn fx:id="colOrderQuantity" prefWidth="75.0" text="Order Qty"><styleClass>
+                  <String fx:value="quantity" />
+                  <String fx:value="cell" />
+               </styleClass> 
+             </TableColumn>
+             <TableColumn fx:id="colOnHandQuantity" prefWidth="75.0" text="O/H Qty"><styleClass>
+                  <String fx:value="quantity" />
+                  <String fx:value="cell" />
+               </styleClass>  </TableColumn>
+             <TableColumn fx:id="colCarrier" prefWidth="75.0" styleClass="cell" text="Carrier" ><styleClass>
+                  <String fx:value="carrier" />
+                  <String fx:value="cell" />
+               </styleClass></TableColumn>
              <TableColumn fx:id="colWave" prefWidth="75.0" styleClass="cell" text="Wave" />
-             <TableColumn fx:id="colStatus" prefWidth="75.0" styleClass="cell" text="Status" />
+             <TableColumn fx:id="colStatus" prefWidth="75.0" text="Status" ><styleClass><String fx:value="status" /><String fx:value="cell" /></styleClass></TableColumn>
              <TableColumn fx:id="colUser" prefWidth="75.0" styleClass="cell" text="User" />
              <TableColumn fx:id="colType" prefWidth="75.0" styleClass="cell" text="Type" />
              <TableColumn fx:id="colCustomer" prefWidth="125.0" text="Customer">
@@ -51,8 +66,10 @@
          <contextMenu>
             <ContextMenu>
               <items>
-                <MenuItem fx:id="mitmExclude" mnemonicParsing="false" text="Exclude" />
-                <MenuItem fx:id="mitmInclude" mnemonicParsing="false" text="Include All" />
+                <MenuItem onAction="#excludeSelected" mnemonicParsing="false" text="Exclude                     " />
+                <MenuItem onAction="#includeAll" mnemonicParsing="false" text="Include All                 " />
+                <MenuItem onAction="#setPriorities" mnemonicParsing="false" text="Set Priorities              " />
+                <MenuItem onAction="#clearAndFilter" mnemonicParsing="false" text="Clear and Filter            " />
               </items>
             </ContextMenu>
          </contextMenu>
