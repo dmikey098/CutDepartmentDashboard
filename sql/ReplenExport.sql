@@ -1,4 +1,5 @@
 SELECT
+    MIN(QHPTY),
     PTY,
     MAX(QHROAN) AS ORD,
     ''''||OLCP AS LP,
@@ -26,8 +27,8 @@ SELECT
     CASE WHEN LDOHQ - MIN(QHTQTY) <= ? THEN 'SP' ELSE '' END AS SP
 FROM
     (SELECT
-        QHPTY AS PTY,
-        RPPTY,
+        RPPTY AS PTY,
+        QHPTY,
         QHROAN,
         TIOLCP AS OLCP,
         QDITM,
@@ -94,4 +95,4 @@ GROUP BY
     LVL,
     LDOHQ
 ORDER BY
-    PTY
+    MIN(QHPTY)
